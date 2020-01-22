@@ -54,8 +54,7 @@ class SlackSubscriber implements EventSubscriberInterface
 
             $this->sendMessage(
                 sprintf(
-                    "%s %s dispo sur `%s` %s\n Pull Request : %s",
-                    getenv('SLACK_LINK_TAG'),
+                    "%s dispo sur `%s` %s\n Pull Request : %s",
                     $subject,
                     $event->getReviewEnvironment(),
                     $blame,
