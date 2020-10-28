@@ -6,6 +6,7 @@ use App\Exception\PullRequestNotFoundException;
 use App\Exception\UnexpectedContentType;
 use App\Handler\GitHubHandler;
 use App\Handler\JirHubTaskHandler;
+use App\Handler\SlackHandler;
 use App\Handler\SynchronizationHandler;
 use App\Repository\GitHub\PullRequestRepository;
 use Psr\Cache\InvalidArgumentException;
@@ -99,5 +100,15 @@ class IndexController extends AbstractController
         $synchronizationHandler->synchronize($jirHubTask);
 
         return new Response('', Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * @Route("/slack_interactions_webhook", name="slack_interactions_webhook", methods={"POST"})
+     */
+    public function slackInteractionsWebhookAction(
+        Request $request,
+        SlackHandler $slackHandler
+    ): Response {
+        return new Response($slackHandler->handleInteraction(json_decode($request->getContent(), true)), Response::HTTP_OK);
     }
 }
