@@ -25,29 +25,35 @@ class ValidationRequired implements SlackMessage
 
     public function normalize(): array
     {
-
         $subject = $this->reviewEnvironment;
-        $blame   = '(demander à ' . $this->pullRequest->getUser()->getLogin() . ' de retrouver la tâche Jira)';
 
         if (null !== $this->jiraIssueKey) {
             $subject = JiraHelper::buildIssueUrlFromIssueName($this->jiraIssueKey);
-            $blame   = '';
         }
-
-        $message = sprintf(
-            "%s dispo sur `%s` %s\n Pull Request : %s",
-            $subject,
-            $this->reviewEnvironment,
-            $blame,
-            $this->pullRequest->getUrl()
-        );
 
         return [
             'icon_emoji' => ':radioactive_sign:',
             'blocks'     => json_encode([
                 [
                     "type" => "section",
-                    "text" => ["type" => "mrkdwn", "text" => $message]
+                    "fields"=> [
+                        [
+                            "type" => "mrkdwn",
+                            "text"=> "*Environement:* {$this->reviewEnvironment}"
+                        ],
+                        [
+                            "type" => "mrkdwn",
+                            "text"=> "*Auteur:* {$this->pullRequest->getUser()->getLogin()}"
+                        ],
+                        [
+                            "type" => "mrkdwn",
+                            "text"=> "*Issue:*\n{$subject}"
+                        ],
+                        [
+                            "type" => "mrkdwn",
+                            "text"=> "*Pull request:*\n{$this->pullRequest->getUrl()}"
+                        ],
+                    ]
                 ],
                 [
                     "type" => "actions",
