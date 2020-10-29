@@ -2,6 +2,7 @@
 
 namespace App\Model\Slack;
 
+use App\Handler\SlackHandler;
 use App\Helper\JiraHelper;
 use App\Model\Github\PullRequest;
 
@@ -47,11 +48,11 @@ class ValidationRequired implements SlackMessage
                         ],
                         [
                             "type" => "mrkdwn",
-                            "text"=> "*Issue:*\n{$subject}"
+                            "text"=> "*Issue:* {$subject}"
                         ],
                         [
                             "type" => "mrkdwn",
-                            "text"=> "*Pull request:*\n{$this->pullRequest->getUrl()}"
+                            "text"=> "*Pull request:* {$this->pullRequest->getUrl()}"
                         ],
                     ]
                 ],
@@ -60,8 +61,8 @@ class ValidationRequired implements SlackMessage
                     "elements" => [
                         [
                             "type" => "button",
-                            "text" => ["type" => "plain_text", "text" => "m'assigner la validation", "emoji" => false],
-                            "action_id" => "assign-pull-request",
+                            "text" => ["type" => "plain_text", "text" => "M'assigner la validation", "emoji" => false],
+                            "action_id" => SlackHandler::ACTION_VALIDATION_ASSIGN,
                             "value" => json_encode([
                                 'pull_request' => $this->pullRequest->normalize(),
                                 'validation_env' => $this->reviewEnvironment,
