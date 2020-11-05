@@ -85,14 +85,6 @@ class SlackHandler
                         )
                     ]
                 );
-                $this->client->post(
-                    $responseUrl,
-                    [
-                        'json' => array_merge(
-                            (new SimpleMessage("@{$body['user']['username']} :broken_heart:"))->normalize()
-                        )
-                    ]
-                );
                 break;
         }
 

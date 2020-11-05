@@ -56,7 +56,7 @@ class ValidationInProgress implements SlackMessage
                         ],
                         [
                             "type" => "mrkdwn",
-                            "text"=> "Pull request: *{$this->pullRequest->getUrl()}*"
+                            "text"=> ": *<{$this->pullRequest->getUrl()}|Voir la Pull request>*"
                         ],
                     ]
                 ],
