@@ -25,7 +25,6 @@ abstract class Validation implements SlackMessage
 
     public function normalize(): array
     {
-
         $subject = $this->reviewEnvironment;
 
         if (null !== $this->jiraIssueKey) {
