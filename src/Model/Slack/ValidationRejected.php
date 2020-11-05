@@ -5,7 +5,7 @@ namespace App\Model\Slack;
 use App\Helper\JiraHelper;
 use App\Model\Github\PullRequest;
 
-class ValidationApproved implements SlackMessage
+class ValidationRejected implements SlackMessage
 {
     /** @var PullRequest */
     private $pullRequest;
@@ -61,7 +61,7 @@ class ValidationApproved implements SlackMessage
                 ],
                 [
                     "type" => "section",
-                    "text" => ["type" => "mrkdwn", "text" => ":heavy_check_mark: Validé par @{$this->validator}"]
+                    "text" => ["type" => "mrkdwn", "text" => ":x: rejetée par @{$this->validator}"]
                 ]
             ])
         ];

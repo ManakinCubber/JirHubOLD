@@ -44,19 +44,19 @@ class ValidationInProgress implements SlackMessage
                     "fields"=> [
                         [
                             "type" => "mrkdwn",
-                            "text"=> "*Environement:* {$this->reviewEnvironment}"
+                            "text"=> "Environement: *{$this->reviewEnvironment}*"
                         ],
                         [
                             "type" => "mrkdwn",
-                            "text"=> "*Auteur:* {$this->pullRequest->getUser()->getLogin()}"
+                            "text"=> "Auteur: *{$this->pullRequest->getUser()->getLogin()}*"
                         ],
                         [
                             "type" => "mrkdwn",
-                            "text"=> "*Issue:* {$subject}"
+                            "text"=> "Issue: *<{$subject}|{$this->jiraIssueKey}>*"
                         ],
                         [
                             "type" => "mrkdwn",
-                            "text"=> "*Pull request:* {$this->pullRequest->getUrl()}"
+                            "text"=> "Pull request: *{$this->pullRequest->getUrl()}*"
                         ],
                     ]
                 ],

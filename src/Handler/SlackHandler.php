@@ -3,8 +3,10 @@
 namespace App\Handler;
 
 use App\Model\Github\PullRequest;
+use App\Model\Slack\SimpleMessage;
 use App\Model\Slack\ValidationApproved;
 use App\Model\Slack\ValidationInProgress;
+use App\Model\Slack\ValidationRejected;
 use GuzzleHttp\Client;
 
 class SlackHandler
@@ -64,6 +66,30 @@ class SlackHandler
                                 $value['jira_issue_key'],
                                 $body['user']['username']
                             ))->normalize()
+                        )
+                    ]
+                );
+                break;           
+            case self::ACTION_VALIDATION_REJECT:
+                $this->client->post(
+                    $responseUrl,
+                    [
+                        'json' => array_merge(
+                            ["replace_original" => true],
+                            (new ValidationRejected(
+                                PullRequest::denormalize($value['pull_request']),
+                                $value['validation_env'],
+                                $value['jira_issue_key'],
+                                $body['user']['username']
+                            ))->normalize()
+                        )
+                    ]
+                );
+                $this->client->post(
+                    $responseUrl,
+                    [
+                        'json' => array_merge(
+                            (new SimpleMessage("@{$body['user']['username']} :broken_heart:"))->normalize()
                         )
                     ]
                 );
