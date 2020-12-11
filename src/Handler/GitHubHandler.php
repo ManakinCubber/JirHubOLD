@@ -34,7 +34,7 @@ class GitHubHandler
     /** @var JiraIssueRepository */
     private $jiraIssueRepository;
 
-    /** @var EventDispatcherInterface $eventDispatcher */
+    /** @var EventDispatcherInterface */
     private $eventDispatcher;
 
     /** @var CacheItemPoolInterface */
@@ -276,9 +276,10 @@ class GitHubHandler
         if (null === $pullRequest) {
             $this->logger->warning(
                 sprintf(
-                    "Could not find pull request from webhook data : %s", json_encode($webhookData)
+                    'Could not find pull request from webhook data : %s', json_encode($webhookData)
                 )
             );
+
             throw new PullRequestNotFoundException();
         }
 

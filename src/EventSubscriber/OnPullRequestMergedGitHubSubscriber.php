@@ -9,7 +9,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class OnPullRequestMergedGitHubSubscriber implements EventSubscriberInterface
 {
-    /** @var GitHubHandler $gitHubHandler */
+    /** @var GitHubHandler */
     protected $gitHubHandler;
 
     /** @var PullRequestLabelRepository */

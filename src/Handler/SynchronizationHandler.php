@@ -10,6 +10,7 @@ use App\Handler\SynchronizationCommand\TransitionJiraIssueToInProgressCommand;
 use App\Handler\SynchronizationCommand\TransitionJiraIssueToInReviewCommand;
 use App\Handler\SynchronizationCommand\TransitionJiraIssueToToValidateCommand;
 use App\Handler\SynchronizationCommand\UpdatePullRequestDescriptionCommand;
+use App\Handler\SynchronizationCommand\UpdatePullRequestLabelsCommand;
 use App\Handler\SynchronizationCommand\UpdatePullRequestTitleCommand;
 use App\Model\JirHubTask;
 use App\Repository\GitHub\PullRequestRepository;
@@ -32,6 +33,9 @@ class SynchronizationHandler
     /** @var UpdatePullRequestDescriptionCommand */
     private $updatePullRequestDescriptionCommand;
 
+    /** @var UpdatePullRequestLabelsCommand */
+    private $updatePullRequestLabelsCommand;
+
     /** @var UpdatePullRequestTitleCommand */
     private $updatePullRequestTitleCommand;
 
@@ -48,6 +52,7 @@ class SynchronizationHandler
         CacheItemPoolInterface $cache,
         DeleteValidationRequiredLabelCommand $deleteValidationRequiredLabelCommand,
         AddValidationRequiredLabelCommand $addValidationRequiredLabelCommand,
+        UpdatePullRequestLabelsCommand $updatePullRequestLabelsCommand,
         UpdatePullRequestDescriptionCommand $updatePullRequestDescriptionCommand,
         UpdatePullRequestTitleCommand $updatePullRequestTitleCommand,
         TransitionJiraIssueToInProgressCommand $transitionJiraIssueToInProgressCommand,
@@ -57,6 +62,7 @@ class SynchronizationHandler
         $this->cache                                  = $cache;
         $this->deleteValidationRequiredLabelCommand   = $deleteValidationRequiredLabelCommand;
         $this->addValidationRequiredLabelCommand      = $addValidationRequiredLabelCommand;
+        $this->updatePullRequestLabelsCommand         = $updatePullRequestLabelsCommand;
         $this->updatePullRequestDescriptionCommand    = $updatePullRequestDescriptionCommand;
         $this->updatePullRequestTitleCommand          = $updatePullRequestTitleCommand;
         $this->transitionJiraIssueToInProgressCommand = $transitionJiraIssueToInProgressCommand;
@@ -82,6 +88,7 @@ class SynchronizationHandler
         $tasks = [
             $this->deleteValidationRequiredLabelCommand,
             $this->addValidationRequiredLabelCommand,
+            $this->updatePullRequestLabelsCommand,
             $this->updatePullRequestDescriptionCommand,
             $this->updatePullRequestTitleCommand,
             $this->transitionJiraIssueToInProgressCommand,

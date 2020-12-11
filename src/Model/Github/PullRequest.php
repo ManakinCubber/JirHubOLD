@@ -2,6 +2,7 @@
 
 namespace App\Model\Github;
 
+use App\Constant\GithubLabels;
 use App\Model\JiraIssue;
 
 class PullRequest
@@ -111,6 +112,17 @@ class PullRequest
         return \in_array($label, $this->labels, true);
     }
 
+    public function isInProgress(): bool
+    {
+        foreach (GithubLabels::getDevelopmentInProgressLabels() as $label) {
+            if (true === \in_array($label, $this->labels, true)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function addLabel(string $label): self
     {
         if (false === $this->hasLabel($label)) {
@@ -149,5 +161,35 @@ class PullRequest
         $this->reviews = $reviews;
 
         return $this;
+    }
+    
+    public function normalize(): array
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'body' =>  $this->body,
+            'headRef' => $this->headRef,
+            'baseRef' => $this->baseRef,
+            'url' => $this->url,
+            'headSha' => $this->headSha,
+            'user' => $this->user->normalize(),
+            'labels' => $this->labels
+        ];
+    }
+    
+    public static function denormalize(array $data): self
+    {
+        return new self(
+            $data['id'],
+            $data['title'],
+            $data['body'],
+            $data['headRef'],
+            $data['baseRef'],
+            $data['url'],
+            $data['headSha'],
+            GithubUser::denormalize($data['user']),
+            $data['labels']
+        );
     }
 }

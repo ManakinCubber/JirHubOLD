@@ -1,4 +1,28 @@
 {
+    "amphp/amp": {
+        "version": "v2.5.1"
+    },
+    "amphp/byte-stream": {
+        "version": "v1.8.0"
+    },
+    "amphp/parallel": {
+        "version": "v1.4.0"
+    },
+    "amphp/parallel-functions": {
+        "version": "v0.1.3"
+    },
+    "amphp/parser": {
+        "version": "v1.0.0"
+    },
+    "amphp/process": {
+        "version": "v1.1.0"
+    },
+    "amphp/serialization": {
+        "version": "v1.0.0"
+    },
+    "amphp/sync": {
+        "version": "v1.4.0"
+    },
     "behat/gherkin": {
         "version": "v4.6.0"
     },
@@ -133,6 +157,12 @@
         "files": [
             "config/packages/nyholm_psr7.yaml"
         ]
+    },
+    "ondram/ci-detector": {
+        "version": "3.5.1"
+    },
+    "opis/closure": {
+        "version": "3.6.1"
     },
     "phar-io/manifest": {
         "version": "1.0.3"
@@ -415,6 +445,9 @@
     "symfony/polyfill-intl-idn": {
         "version": "v1.12.0"
     },
+    "symfony/polyfill-intl-normalizer": {
+        "version": "v1.20.0"
+    },
     "symfony/polyfill-mbstring": {
         "version": "v1.10.0"
     },
@@ -423,6 +456,9 @@
     },
     "symfony/polyfill-php73": {
         "version": "v1.12.0"
+    },
+    "symfony/polyfill-php80": {
+        "version": "v1.20.0"
     },
     "symfony/process": {
         "version": "v4.1.11"

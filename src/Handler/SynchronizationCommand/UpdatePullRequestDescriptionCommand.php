@@ -17,7 +17,7 @@ final class UpdatePullRequestDescriptionCommand implements SynchronizationComman
 
     public function __construct(
         PullRequestRepository $pullRequestRepository,
-    LoggerInterface $logger
+        LoggerInterface $logger
     ) {
         $this->pullRequestRepository = $pullRequestRepository;
         $this->logger                = $logger;

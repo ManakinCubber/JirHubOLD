@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class HerokuApi
 {
-    /** @var Client $guzzleClient */
+    /** @var Client */
     private $guzzleClient;
 
     public function __construct(string $domain, string $apiKey)

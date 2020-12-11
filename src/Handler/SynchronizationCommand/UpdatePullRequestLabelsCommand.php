@@ -2,18 +2,17 @@
 
 namespace App\Handler\SynchronizationCommand;
 
-use App\Handler\GitHubHandler;
+use App\Constant\GithubLabels;
+use App\Constant\JiraIssueTypes;
 use App\Model\JirHubTask;
 use App\Repository\GitHub\PullRequestLabelRepository;
+use App\Repository\GitHub\PullRequestRepository;
 use Psr\Log\LoggerInterface;
 
-final class AddValidationRequiredLabelCommand implements SynchronizationCommandInterface
+final class UpdatePullRequestLabelsCommand implements SynchronizationCommandInterface
 {
-    /** @var GitHubHandler */
-    private $githubHandler;
-
-    /** @var string */
-    private $label;
+    /** @var PullRequestRepository */
+    private $pullRequestRepository;
 
     /** @var PullRequestLabelRepository */
     private $pullRequestLabelRepository;
@@ -22,13 +21,11 @@ final class AddValidationRequiredLabelCommand implements SynchronizationCommandI
     private $logger;
 
     public function __construct(
-        GitHubHandler $githubHandler,
-        string $label,
+        PullRequestRepository $pullRequestRepository,
         PullRequestLabelRepository $pullRequestLabelRepository,
         LoggerInterface $logger
     ) {
-        $this->githubHandler              = $githubHandler;
-        $this->label                      = $label;
+        $this->pullRequestRepository      = $pullRequestRepository;
         $this->pullRequestLabelRepository = $pullRequestLabelRepository;
         $this->logger                     = $logger;
     }
@@ -36,23 +33,23 @@ final class AddValidationRequiredLabelCommand implements SynchronizationCommandI
     public function execute(JirHubTask $jirHubTask): void
     {
         $pullRequest = $jirHubTask->getGithubPullRequest();
+        $jiraIssue   = $jirHubTask->getJiraIssue();
 
-        if (
-            false === $pullRequest->hasLabel($this->label)
-            && $this->githubHandler->isPullRequestApproved($pullRequest)
-            && false === $this->githubHandler->isDeployed($pullRequest)
-            && false === $this->githubHandler->isValidated($pullRequest)
-            && false === $pullRequest->isInProgress()
-        ) {
+        if (null === $jiraIssue) {
+            return;
+        }
+
+        if (false === $pullRequest->hasLabel(GithubLabels::BUG)
+            && JiraIssueTypes::BUG === $jiraIssue->getIssueType()->getName()) {
             $this->pullRequestLabelRepository->create(
                 $pullRequest,
-                $this->label
+                GithubLabels::BUG
             );
 
             $this->logger->info(
                 sprintf(
                     'Added label %s to pull request #%d',
-                    $this->label,
+                    GithubLabels::BUG,
                     $pullRequest->getId()
                 )
             );

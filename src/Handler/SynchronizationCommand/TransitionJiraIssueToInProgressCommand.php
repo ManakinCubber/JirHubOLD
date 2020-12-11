@@ -70,7 +70,7 @@ final class TransitionJiraIssueToInProgressCommand implements SynchronizationCom
 
         foreach ($this->inProgressLabels as $inProgressLabel) {
             if (
-                $pullRequest->hasLabel($inProgressLabel)
+                true === $pullRequest->hasLabel($inProgressLabel)
                 && $jiraIssue->getStatus()->getId() !== $this->statusId
             ) {
                 $transition = new JiraTransition($this->globalTransitionId, 'JirHub transitionned this issue');

@@ -42,6 +42,7 @@ final class DeleteValidationRequiredLabelCommand implements SynchronizationComma
                 !$this->githubHandler->isPullRequestApproved($pullRequest)
                 || $this->githubHandler->isDeployed($pullRequest)
                 || $this->githubHandler->isValidated($pullRequest)
+                || $pullRequest->isInProgress()
             )
         ) {
             $this->pullRequestLabelRepository->delete(

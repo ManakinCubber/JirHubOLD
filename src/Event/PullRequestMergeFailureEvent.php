@@ -10,7 +10,7 @@ class PullRequestMergeFailureEvent extends Event
     /** @var PullRequest */
     protected $pullRequest;
 
-    /** @var string $message */
+    /** @var string */
     protected $message;
 
     public function __construct(PullRequest $pullRequest, string $message)

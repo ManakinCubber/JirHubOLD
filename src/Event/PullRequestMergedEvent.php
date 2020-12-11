@@ -7,7 +7,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class PullRequestMergedEvent extends Event
 {
-    /** @var PullRequest $pullRequest */
+    /** @var PullRequest */
     protected $pullRequest;
 
     public function __construct(PullRequest $pullRequest)

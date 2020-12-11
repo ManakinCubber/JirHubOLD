@@ -121,6 +121,10 @@ services:
             $domain: '%heroku.domain%'
             $apiKey: '%heroku.api_key%'
 
+    App\Handler\SlackHandler:
+        arguments: 
+            $token: '%env(SLACK_TOKEN)%'
+
     App\Dashboard\Query\ReviewEnvironments: '@App\Dashboard\Query\Adapter\FromRepositoryReviewEnvironments'
     App\Dashboard\Query\PullRequestsToDeploy: '@App\Dashboard\Query\Adapter\FromRepositoryPullRequestsToDeploy'
     App\Dashboard\Query\PullRequestsToMergeOnDev: '@App\Dashboard\Query\Adapter\FromRepositoryPullRequestsToMergeOnDev'

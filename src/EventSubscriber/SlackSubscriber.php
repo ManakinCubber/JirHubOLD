@@ -4,7 +4,8 @@ namespace App\EventSubscriber;
 
 use App\Event\LabelsAppliedEvent;
 use App\Event\PullRequestMergeFailureEvent;
-use App\Helper\JiraHelper;
+use App\Model\Slack\SlackMessage;
+use App\Model\Slack\ValidationRequired;
 use JoliCode\Slack\Api\Client;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -29,7 +30,7 @@ class SlackSubscriber implements EventSubscriberInterface
     public function onPrFail(PullRequestMergeFailureEvent $event)
     {
         try {
-            $this->sendMessage(
+            $this->sendRawMessage(
                 sprintf(
                     "JirHub could not merge this pull request : %s \nError : %s",
                     $event->getPullRequest()->getUrl(),
@@ -44,29 +45,35 @@ class SlackSubscriber implements EventSubscriberInterface
     public function onLabelsApplied(LabelsAppliedEvent $event)
     {
         try {
-            $subject = $event->getReviewEnvironment();
-            $blame   = '(demander à ' . $event->getPullRequest()->getUser()->getLogin() . ' de retrouver la tâche Jira)';
-
-            if (null !== $event->getJiraIssueKey()) {
-                $subject = JiraHelper::buildIssueUrlFromIssueName($event->getJiraIssueKey());
-                $blame   = '';
-            }
-
             $this->sendMessage(
-                sprintf(
-                    "%s dispo sur `%s` %s\n Pull Request : %s",
-                    $subject,
-                    $event->getReviewEnvironment(),
-                    $blame,
-                    $event->getPullRequest()->getUrl()
-                ),
+                new ValidationRequired($event->getPullRequest(), $event->getReviewEnvironment(), $event->getJiraIssueKey()),
                 getenv('SLACK_REVIEW_CHANNEL')
             );
         } catch (\Throwable $t) {
+            error_log($t->getMessage());
         }
     }
 
-    protected function sendMessage(string $message, string $channel = '')
+    protected function sendMessage(SlackMessage $message, string $channel = ''): void
+    {
+        if ('' === $channel) {
+            $channel = getenv('SLACK_DEV_CHANNEL');
+        }
+        
+        $message = array_merge(
+            [
+                'username' => 'JirHub',
+                'channel'  => $channel
+            ],
+            $message->normalize()
+        );
+        
+        error_log(json_encode($message));
+        
+        $this->client->chatPostMessage($message);
+    }
+
+    protected function sendRawMessage(string $message, string $channel = '')
     {
         if ('' === $channel) {
             $channel = getenv('SLACK_DEV_CHANNEL');
