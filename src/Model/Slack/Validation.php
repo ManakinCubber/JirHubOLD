@@ -32,34 +32,34 @@ abstract class Validation implements SlackMessage
         }
 
         return [
-            'blocks'     => json_encode(array_merge(
+            'blocks' => json_encode(array_merge(
                 [
                     [
-                        "type" => "section",
-                        "fields"=> [
+                        'type'   => 'section',
+                        'fields' => [
                             [
-                                "type" => "mrkdwn",
-                                "text"=> "Environement: *{$this->reviewEnvironment}*"
+                                'type' => 'mrkdwn',
+                                'text' => "Environement: *{$this->reviewEnvironment}*",
                             ],
                             [
-                                "type" => "mrkdwn",
-                                "text"=> "Auteur: *{$this->pullRequest->getUser()->getLogin()}*"
+                                'type' => 'mrkdwn',
+                                'text' => "Auteur: *{$this->pullRequest->getUser()->getLogin()}*",
                             ],
                             [
-                                "type" => "mrkdwn",
-                                "text"=> "Issue: *<{$subject}|{$this->jiraIssueKey}>*"
+                                'type' => 'mrkdwn',
+                                'text' => "Issue: *<{$subject}|{$this->jiraIssueKey}>*",
                             ],
                             [
-                                "type" => "mrkdwn",
-                                "text"=> "*<{$this->pullRequest->getUrl()}|Voir la Pull request>*"
+                                'type' => 'mrkdwn',
+                                'text' => "*<{$this->pullRequest->getUrl()}|Voir la Pull request>*",
                             ],
-                        ]
-                    ]
+                        ],
+                    ],
                 ],
                 $this->normalizeStep()
-            ))
+            )),
         ];
     }
-    
+
     abstract public function normalizeStep(): array;
 }

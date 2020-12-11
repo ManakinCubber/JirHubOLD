@@ -37,16 +37,16 @@ class GithubUser
     {
         return $this->avatarUrl;
     }
-    
+
     public function normalize(): array
     {
         return [
-            'id' => $this->id,
-            'login' => $this->login,
-            'avatarUrl' => $this->avatarUrl
+            'id'        => $this->id,
+            'login'     => $this->login,
+            'avatarUrl' => $this->avatarUrl,
         ];
     }
-    
+
     public static function denormalize(array $data): self
     {
         return new self(

@@ -59,17 +59,17 @@ class SlackSubscriber implements EventSubscriberInterface
         if ('' === $channel) {
             $channel = getenv('SLACK_DEV_CHANNEL');
         }
-        
+
         $message = array_merge(
             [
                 'username' => 'JirHub',
-                'channel'  => $channel
+                'channel'  => $channel,
             ],
             $message->normalize()
         );
-        
+
         error_log(json_encode($message));
-        
+
         $this->client->chatPostMessage($message);
     }
 

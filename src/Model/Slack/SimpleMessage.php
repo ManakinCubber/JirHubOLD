@@ -11,9 +11,9 @@ class SimpleMessage implements SlackMessage
     {
         $this->message = $message;
     }
-    
+
     public function normalize(): array
     {
-        return ["text" => $this->message];
+        return ['text' => $this->message];
     }
 }

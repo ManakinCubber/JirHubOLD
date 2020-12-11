@@ -10,20 +10,20 @@ class ValidationRequired extends Validation
     {
         return [
             [
-                "type" => "actions",
-                "elements" => [
+                'type'     => 'actions',
+                'elements' => [
                     [
-                        "type" => "button",
-                        "text" => ["type" => "plain_text", "text" => "M'assigner la validation", "emoji" => false],
-                        "action_id" => SlackHandler::ACTION_VALIDATION_ASSIGN,
-                        "value" => json_encode([
-                            'pull_request' => $this->pullRequest->normalize(),
+                        'type'      => 'button',
+                        'text'      => ['type' => 'plain_text', 'text' => "M'assigner la validation", 'emoji' => false],
+                        'action_id' => SlackHandler::ACTION_VALIDATION_ASSIGN,
+                        'value'     => json_encode([
+                            'pull_request'   => $this->pullRequest->normalize(),
                             'validation_env' => $this->reviewEnvironment,
-                            'jira_issue_key' => $this->jiraIssueKey
-                        ])
-                    ]
-                ]
-            ]
+                            'jira_issue_key' => $this->jiraIssueKey,
+                        ]),
+                    ],
+                ],
+            ],
         ];
     }
 }

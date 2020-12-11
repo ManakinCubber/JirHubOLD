@@ -162,22 +162,22 @@ class PullRequest
 
         return $this;
     }
-    
+
     public function normalize(): array
     {
         return [
-            'id' => $this->id,
-            'title' => $this->title,
-            'body' =>  $this->body,
+            'id'      => $this->id,
+            'title'   => $this->title,
+            'body'    => $this->body,
             'headRef' => $this->headRef,
             'baseRef' => $this->baseRef,
-            'url' => $this->url,
+            'url'     => $this->url,
             'headSha' => $this->headSha,
-            'user' => $this->user->normalize(),
-            'labels' => $this->labels
+            'user'    => $this->user->normalize(),
+            'labels'  => $this->labels,
         ];
     }
-    
+
     public static function denormalize(array $data): self
     {
         return new self(

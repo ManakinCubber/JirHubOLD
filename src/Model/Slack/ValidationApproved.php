@@ -8,7 +8,7 @@ class ValidationApproved extends Validation
 {
     /** @var string */
     private $validator;
-    
+
     public function __construct(PullRequest $pullRequest, string $reviewEnvironment, ?string $jiraIssueKey, string $validator)
     {
         parent::__construct($pullRequest, $reviewEnvironment, $jiraIssueKey);
@@ -17,11 +17,11 @@ class ValidationApproved extends Validation
 
     public function normalizeStep(): array
     {
-        return  [
+        return [
             [
-                "type" => "section",
-                "text" => ["type" => "mrkdwn", "text" => ":heavy_check_mark: Validé par @{$this->validator}"]
-            ]
+                'type' => 'section',
+                'text' => ['type' => 'mrkdwn', 'text' => ":heavy_check_mark: Validé par @{$this->validator}"],
+            ],
         ];
     }
 }

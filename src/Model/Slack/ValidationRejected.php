@@ -19,9 +19,9 @@ class ValidationRejected extends Validation
     {
         return [
             [
-                "type" => "section",
-                "text" => ["type" => "mrkdwn", "text" => ":x: rejetée par @{$this->validator}"]
-            ]
+                'type' => 'section',
+                'text' => ['type' => 'mrkdwn', 'text' => ":x: rejetée par @{$this->validator}"],
+            ],
         ];
     }
 }
