@@ -77,6 +77,15 @@
     "doctrine/lexer": {
         "version": "v1.0.1"
     },
+    "elasticsearch/elasticsearch": {
+        "version": "v7.10.0"
+    },
+    "ezimuel/guzzlestreams": {
+        "version": "3.0.1"
+    },
+    "ezimuel/ringphp": {
+        "version": "1.1.2"
+    },
     "facebook/webdriver": {
         "version": "1.2.0"
     },
@@ -268,6 +277,9 @@
     },
     "ralouphie/getallheaders": {
         "version": "3.0.3"
+    },
+    "react/promise": {
+        "version": "v2.8.0"
     },
     "sebastian/code-unit-reverse-lookup": {
         "version": "1.0.1"

@@ -4,16 +4,15 @@ namespace App\Model;
 
 class JiraIssueType
 {
-    /** @var int */
-    private $id;
+    private int $id;
+    private string $name;
+    private bool $subtask;
 
-    /** @var string */
-    private $name;
-
-    public function __construct(int $id, string $name)
+    public function __construct(int $id, string $name, bool $subtask)
     {
-        $this->id   = $id;
-        $this->name = $name;
+        $this->id      = $id;
+        $this->name    = $name;
+        $this->subtask = $subtask;
     }
 
     public function getId(): int
@@ -24,5 +23,10 @@ class JiraIssueType
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function isSubtask(): bool
+    {
+        return $this->subtask;
     }
 }

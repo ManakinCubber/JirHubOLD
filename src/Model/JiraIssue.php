@@ -2,33 +2,54 @@
 
 namespace App\Model;
 
-use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 
 class JiraIssue
 {
-    /** @var string */
-    private $key;
-
-    /** @var JiraIssueStatus */
-    private $status;
-
-    /** @var JiraIssueType */
-    private $type;
-
-    /** @var UriInterface */
-    private $uri;
+    private int $id;
+    private string $key;
+    private string $summary;
+    private bool $flagged;
+    private string $priority;
+    private JiraIssueType $type;
+    private JiraIssueStatus $status;
+    private \DateTimeInterface $createdAt;
+    private UriInterface $uri;
+    private \DateInterval $lifespan;
+    private ?string $epicKey;
+    private ?\DateTimeInterface $resolvedAt;
 
     public function __construct(
+        int $id,
         string $key,
-        JiraIssueStatus $status,
+        string $summary,
+        bool $flagged,
+        string $priority,
         JiraIssueType $type,
-        Uri $uri
+        JiraIssueStatus $status,
+        \DateTimeInterface $createdAt,
+        UriInterface $uri,
+        ?string $epicKey,
+        ?\DateTimeInterface $resolvedAt
     ) {
-        $this->key    = $key;
-        $this->status = $status;
-        $this->type   = $type;
-        $this->uri    = $uri;
+        $this->id         = $id;
+        $this->key        = $key;
+        $this->summary    = $summary;
+        $this->flagged    = $flagged;
+        $this->priority   = $priority;
+        $this->type       = $type;
+        $this->status     = $status;
+        $this->createdAt  = $createdAt;
+        $this->uri        = $uri;
+        $this->epicKey    = $epicKey;
+        $this->resolvedAt = $resolvedAt;
+
+        $this->computeLifespan();
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function getKey(): string
@@ -36,18 +57,64 @@ class JiraIssue
         return $this->key;
     }
 
+    public function getSummary(): string
+    {
+        return $this->summary;
+    }
+
+    public function isFlagged(): bool
+    {
+        return $this->flagged;
+    }
+
+    public function getPriority(): string
+    {
+        return $this->priority;
+    }
+
+    public function getType(): JiraIssueType
+    {
+        return $this->type;
+    }
+
     public function getStatus(): JiraIssueStatus
     {
         return $this->status;
     }
 
-    public function getIssueType(): JiraIssueType
+    public function getCreatedAt(): \DateTimeInterface
     {
-        return $this->type;
+        return $this->createdAt;
+    }
+
+    public function getLifespan(): \DateInterval
+    {
+        return $this->lifespan;
     }
 
     public function getUri(): UriInterface
     {
         return $this->uri;
+    }
+
+    public function getEpicKey(): ?string
+    {
+        return $this->epicKey;
+    }
+
+    public function getResolvedAt(): ?\DateTimeInterface
+    {
+        return $this->resolvedAt;
+    }
+
+    private function computeLifespan(): void
+    {
+        $endDate = $this->resolvedAt;
+
+        if (false === $endDate instanceof \DateTimeInterface) {
+            $endDate = new \DateTimeImmutable();
+        }
+
+        $this->lifespan = $this->createdAt->diff($endDate);
     }
 }

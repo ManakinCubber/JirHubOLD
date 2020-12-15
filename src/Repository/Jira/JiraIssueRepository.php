@@ -16,6 +16,7 @@ class JiraIssueRepository
 {
     private const ROUTE_GET_ISSUE       = '/issue/%s';
     private const ROUTE_POST_TRANSITION = '/issue/%s/transitions';
+    private const ROUTE_SEARCH          = '/search';
 
     /** @var JiraClient */
     private $jiraClient;
@@ -60,5 +61,20 @@ class JiraIssueRepository
             [],
             $jiraTransition->toArray()
         );
+    }
+
+    public function search(string $jql): array
+    {
+        $issues     = [];
+        $issuesData = $this->jiraClient->get(
+            self::ROUTE_SEARCH,
+            ['jql' => $jql]
+        );
+
+        foreach ($issuesData['issues'] as $issueData) {
+            $issues[] = $this->jiraIssueFactory->create($issueData);
+        }
+
+        return $issues;
     }
 }

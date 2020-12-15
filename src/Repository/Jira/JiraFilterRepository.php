@@ -3,7 +3,6 @@
 namespace App\Repository\Jira;
 
 use App\Client\JiraClient;
-use App\Factory\JiraIssueFactory;
 use App\Model\JiraFilter;
 
 class JiraFilterRepository
@@ -13,25 +12,19 @@ class JiraFilterRepository
     /** @var JiraClient */
     private $jiraClient;
 
-    /** @var JiraIssueFactory */
-    private $jiraIssueFactory;
+    /** @var JiraIssueRepository */
+    private $jiraIssueRepository;
 
-    public function __construct(JiraClient $jiraClient, JiraIssueFactory $jiraIssueFactory)
+    public function __construct(JiraClient $jiraClient, JiraIssueRepository $jiraIssueRepository)
     {
-        $this->jiraClient       = $jiraClient;
-        $this->jiraIssueFactory = $jiraIssueFactory;
+        $this->jiraClient          = $jiraClient;
+        $this->jiraIssueRepository = $jiraIssueRepository;
     }
 
     public function find(int $id): JiraFilter
     {
         $filterData = $this->jiraClient->get(sprintf(self::ROUTE_GET_FILTER, $id));
-        $issuesData = $this->jiraClient->get($filterData['searchUrl']);
-
-        $issues = [];
-
-        foreach ($issuesData['issues'] as $issueData) {
-            $issues[] = $this->jiraIssueFactory->create($issueData);
-        }
+        $issues     = $this->jiraIssueRepository->search($filterData['jql']);
 
         return new JiraFilter($filterData['id'], $filterData['name'], $issues);
     }
