@@ -18,6 +18,7 @@ class JiraIssue
     private \DateInterval $lifespan;
     private ?string $epicKey;
     private ?\DateTimeInterface $resolvedAt;
+    private ?\DateTimeInterface $publishedAt;
 
     public function __construct(
         int $id,
@@ -30,19 +31,21 @@ class JiraIssue
         \DateTimeInterface $createdAt,
         UriInterface $uri,
         ?string $epicKey,
+        ?\DateTimeInterface $publishedAt,
         ?\DateTimeInterface $resolvedAt
     ) {
-        $this->id         = $id;
-        $this->key        = $key;
-        $this->summary    = $summary;
-        $this->flagged    = $flagged;
-        $this->priority   = $priority;
-        $this->type       = $type;
-        $this->status     = $status;
-        $this->createdAt  = $createdAt;
-        $this->uri        = $uri;
-        $this->epicKey    = $epicKey;
-        $this->resolvedAt = $resolvedAt;
+        $this->id          = $id;
+        $this->key         = $key;
+        $this->summary     = $summary;
+        $this->flagged     = $flagged;
+        $this->priority    = $priority;
+        $this->type        = $type;
+        $this->status      = $status;
+        $this->createdAt   = $createdAt;
+        $this->uri         = $uri;
+        $this->epicKey     = $epicKey;
+        $this->publishedAt = $publishedAt;
+        $this->resolvedAt  = $resolvedAt;
 
         $this->computeLifespan();
     }
@@ -107,14 +110,16 @@ class JiraIssue
         return $this->resolvedAt;
     }
 
+    public function getPublishedAt(): ?\DateTimeInterface
+    {
+        return $this->publishedAt;
+    }
+
     private function computeLifespan(): void
     {
-        $endDate = $this->resolvedAt;
+        $startDate = $this->publishedAt ?? $this->createdAt;
+        $endDate   = $this->resolvedAt  ?? new \DateTimeImmutable();
 
-        if (false === $endDate instanceof \DateTimeInterface) {
-            $endDate = new \DateTimeImmutable();
-        }
-
-        $this->lifespan = $this->createdAt->diff($endDate);
+        $this->lifespan = $startDate->diff($endDate);
     }
 }

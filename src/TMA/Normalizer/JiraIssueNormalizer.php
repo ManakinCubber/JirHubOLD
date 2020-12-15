@@ -15,17 +15,18 @@ final class JiraIssueNormalizer
             'summary'    => $jiraIssue->getSummary(),
             'flagged'    => $jiraIssue->isFlagged(),
             'epic_key'   => $jiraIssue->getEpicKey(),
-            'issuetype'  => [
+            'issue_type' => [
                 'id'      => $jiraIssue->getType()->getId(),
                 'name'    => $jiraIssue->getType()->getName(),
                 'subtask' => $jiraIssue->getType()->isSubtask(),
             ],
-            'priority'    => $jiraIssue->getPriority(),
-            'status'      => $jiraIssue->getStatus()->getName(),
-            'uri'         => (string) $jiraIssue->getUri(),
-            'created_at'  => $jiraIssue->getCreatedAt()->format(\DateTimeInterface::ATOM),
-            'resolved_at' => $jiraIssue->getResolvedAt() instanceof \DateTimeInterface ? $jiraIssue->getResolvedAt()->format(\DateTimeInterface::ATOM) : null,
-            'lifespan'    => $this->getLifespanInMinutes($jiraIssue->getLifespan()),
+            'priority'     => $jiraIssue->getPriority(),
+            'status'       => $jiraIssue->getStatus()->getName(),
+            'uri'          => (string) $jiraIssue->getUri(),
+            'created_at'   => $jiraIssue->getCreatedAt()->format(\DateTimeInterface::ATOM),
+            'published_at' => $jiraIssue->getPublishedAt() instanceof \DateTimeInterface ? $jiraIssue->getPublishedAt()->format(\DateTimeInterface::ATOM) : null,
+            'resolved_at'  => $jiraIssue->getResolvedAt() instanceof \DateTimeInterface ? $jiraIssue->getResolvedAt()->format(\DateTimeInterface::ATOM) : null,
+            'lifespan'     => $this->getLifespanInMinutes($jiraIssue->getLifespan()),
         ];
     }
 

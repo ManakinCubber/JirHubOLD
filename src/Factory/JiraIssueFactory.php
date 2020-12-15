@@ -42,7 +42,8 @@ class JiraIssueFactory
                 )
             ),
             $issueData['fields']['customfield_10005'],
-            null // $resolvedAt // TODO : get custom field
+            \is_string($issueData['fields']['customfield_10739']) ? new \DateTimeImmutable($issueData['fields']['customfield_10739']) : null,
+            \is_string($issueData['fields']['customfield_10758']) ? new \DateTimeImmutable($issueData['fields']['customfield_10758']) : null
         );
     }
 }
