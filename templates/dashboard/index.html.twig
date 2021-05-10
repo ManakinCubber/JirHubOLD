@@ -19,7 +19,11 @@
                             <div class="tile is-child env {{ env.name }} {% if free %} free {% endif %}">
                                 {% if free %}
                                     <span class="is-center">DISPONIBLE</span>
+                                    {% if env.owner is not null %}
+                                        <span class="is-center env-owner">{{ env.owner }}</span>
+                                    {% endif %}
                                     <button class="button" disabled>Déployer</button>
+                                   
                                 {% else %}
 
                                     <div class="quick-links dropdown is-right is-hoverable">

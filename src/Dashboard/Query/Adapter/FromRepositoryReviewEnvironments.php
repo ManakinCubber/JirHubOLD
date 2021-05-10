@@ -27,10 +27,10 @@ class FromRepositoryReviewEnvironments implements ReviewEnvironments
     public function fetch(): array
     {
         $environments = [
-            new ReviewEnvironment('red'),
-            new ReviewEnvironment('blue'),
-            new ReviewEnvironment('green'),
-            new ReviewEnvironment('yellow'),
+            new ReviewEnvironment("red"),
+            new ReviewEnvironment('blue', 'PL Invoice'),
+            new ReviewEnvironment('green', 'PL Expert'),
+            new ReviewEnvironment('yellow', 'PL Accounts/Wallet'),
         ];
 
         /** @var ReviewEnvironment $environment */

@@ -1,9 +1,14 @@
+@use "sass:map";
+
 $light: #BFCEE1;
 $dark: #142439;
-$green: #7DFCAC;
-$blue: #54CEFF;
-$red: #FF7483;
-$yellow: #FFD366;
+
+$validation-env-colors: (
+  "green": #7DFCAC,
+  "red": #FF7483,
+  "blue": #54CEFF,
+  "yellow": #FFD366,
+);
 
 html {
   background-color: $dark !important;
@@ -64,74 +69,22 @@ html {
           background-color: $dark !important;
         }
 
-        &.green {
-          background-color: $green;
-          border-color: $green;
-          color: #fff;
+        @each $env, $color in $validation-env-colors {
+          &.#{$env} {
+            background-color: $color;
+            border-color: $color;
+            color: #fff;
 
-          &.free {
-            * {
-              color: $green;
-            }
+            &.free {
+              * {
+                color: $color;
+              }
 
-            .button {
-              background-color: $green;
-              border-color: $green;
-              color: #ffffff;
-            }
-          }
-        }
-
-        &.blue {
-          background-color: $blue;
-          border-color: $blue;
-          color: #fff;
-
-          &.free {
-            * {
-              color: $blue;
-            }
-
-            .button {
-              background-color: $blue;
-              border-color: $blue;
-              color: #ffffff;
-            }
-          }
-        }
-
-        &.red {
-          background-color: $red;
-          border-color: $red;
-          color: #fff;
-
-          &.free {
-            * {
-              color: $red;
-            }
-
-            .button {
-              background-color: $red;
-              border-color: $red;
-              color: #ffffff;
-            }
-          }
-        }
-
-        &.yellow {
-          background-color: $yellow;
-          border-color: $yellow;
-          color: rgba(0, 0, 0, .7);
-
-          &.free {
-            * {
-              color: $yellow;
-            }
-
-            .button {
-              background-color: $yellow;
-              border-color: $yellow;
-              color: rgba(0, 0, 0, .7);
+              .button {
+                background-color: $color;
+                border-color: $color;
+                color: #ffffff;
+              }
             }
           }
         }
@@ -155,6 +108,12 @@ html {
 
         .quick-links {
           align-self: flex-end;
+        }
+        
+        .env-owner {
+          font-style: italic;
+          font-size: .8rem;
+          color: #445469 !important;
         }
       }
 

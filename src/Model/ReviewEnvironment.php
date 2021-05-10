@@ -13,9 +13,12 @@ class ReviewEnvironment
     /** @var string */
     private $pullRequestTitle;
 
-    public function __construct(string $name)
+    private ?string $owner;
+
+    public function __construct(string $name, ?string $owner = null)
     {
         $this->name = $name;
+        $this->owner = $owner;
     }
 
     public function getName(): string
@@ -35,6 +38,11 @@ class ReviewEnvironment
         return $this;
     }
 
+    public function getOwner(): ?string
+    {
+        return $this->owner;
+    }
+    
     public function getPullRequestTitle(): string
     {
         if (null === $this->pullRequestTitle) {
