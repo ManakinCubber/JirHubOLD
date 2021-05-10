@@ -75,7 +75,7 @@ final class TransitionJiraIssueToInProgressCommand implements SynchronizationCom
             ) {
                 $transition = new JiraTransition($this->globalTransitionId, 'JirHub transitionned this issue');
 
-                if ($jiraIssue->getIssueType()->getId() === $this->subTaskTypeId) {
+                if ($jiraIssue->getType()->getId() === $this->subTaskTypeId) {
                     foreach ($this->subTaskTransitions as $subTaskTransition) {
                         if ($jiraIssue->getStatus()->getId() === $subTaskTransition['statusId']) {
                             $transition = new JiraTransition($subTaskTransition['transitionId'], 'JirHub transitionned this issue');

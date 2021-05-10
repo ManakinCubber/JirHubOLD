@@ -38,15 +38,8 @@ class ReviewEnvironment
     public function getPullRequestTitle(): string
     {
         if (null === $this->pullRequestTitle) {
-            $issueKey = '';
-
-            if (null !== $this->jirHubTask->getJiraIssue()) {
-                $issueKey = $this->jirHubTask->getJiraIssue()->getKey();
-            }
-
-            $this->pullRequestTitle = ucfirst(
-                trim(str_ireplace($issueKey, '', $this->jirHubTask->getGithubPullRequest()->getTitle()), ' :|-')
-            );
+            $explodeTitle = preg_split('/\[?ta-[0-9]{1,9}(\]|( ?(:|\|)))? ?/i', $this->jirHubTask->getGithubPullRequest()->getTitle());
+            $this->pullRequestTitle = trim(array_pop($explodeTitle));
         }
 
         return $this->pullRequestTitle;
