@@ -47,7 +47,18 @@ final class UpdatePullRequestTitleCommand implements SynchronizationCommandInter
             if ($pullRequest->hasLabel($label) && empty($matches['prefix'])) {
                 $betterPrTitle = sprintf('[%s] %s', $prefix, $title);
             } elseif (!$pullRequest->hasLabel($label) && $matches['prefix'] === $prefix) {
-                $betterPrTitle = str_replace(sprintf('[%s] ', $prefix), '', $title);
+                $this->pullRequestLabelRepository->create(
+                    $pullRequest,
+                    $label
+                );
+    
+                $this->logger->info(
+                    sprintf(
+                        'Added label %s to pull request #%d',
+                        $label,
+                        $pullRequest->getId()
+                    )
+                );
             }
         }
 
