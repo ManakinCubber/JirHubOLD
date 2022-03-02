@@ -4,6 +4,7 @@ namespace App\Handler\SynchronizationCommand;
 
 use App\Model\JirHubTask;
 use App\Repository\GitHub\Constant\PullRequestUpdatableFields;
+use App\Repository\GitHub\PullRequestLabelRepository;
 use App\Repository\GitHub\PullRequestRepository;
 use Psr\Log\LoggerInterface;
 
@@ -12,14 +13,19 @@ final class UpdatePullRequestTitleCommand implements SynchronizationCommandInter
     /** @var PullRequestRepository */
     private $pullRequestRepository;
 
+    /** @var PullRequestLabelRepository */
+    private $pullRequestLabelRepository;
+
     /** @var LoggerInterface */
     private $logger;
 
     public function __construct(
         PullRequestRepository $pullRequestRepository,
+        PullRequestLabelRepository $pullRequestLabelRepository,
         LoggerInterface $logger
     ) {
         $this->pullRequestRepository = $pullRequestRepository;
+        $this->pullRequestLabelRepository = $pullRequestLabelRepository;
         $this->logger                = $logger;
     }
 
