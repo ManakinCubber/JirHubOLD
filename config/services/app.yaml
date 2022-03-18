@@ -32,6 +32,13 @@ services:
     resource: '../../src/Controller'
     tags: ['controller.service_arguments']
 
+  App\Controller\HerokuController:
+    arguments:
+      $deployHookToken: '%env(HEROKU_DEPLOY_HOOK_TOKEN)%'
+      $repositoryOwner: '%env(GITHUB_REPOSITORY_OWNER)%'
+      $repositoryName: '%env(GITHUB_REPOSITORY_NAME)%'
+      $slackChangelogChannel: '%env(SLACK_CHANGELOG_CHANNEL)%'
+
   App\Client\GitHubClient:
     arguments:
       $gitHubAppId: '%github.app_id%'

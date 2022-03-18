@@ -18,10 +18,19 @@ class HerokuController extends AbstractController
     /** @var ChangelogHandler */
     protected $changelogHandler;
 
-    public function __construct(SlackClient $slack, ChangelogHandler $changelogHandler)
+    private string $deployHookToken;
+    private string $repositoryOwner;
+    private string $repositoryName;
+    private string $slackChangelogChannel;
+
+    public function __construct(SlackClient $slack, ChangelogHandler $changelogHandler, string $deployHookToken, string $repositoryOwner, string $repositoryName, string $slackChangelogChannel)
     {
-        $this->slack            = $slack;
-        $this->changelogHandler = $changelogHandler;
+        $this->slack                 = $slack;
+        $this->changelogHandler      = $changelogHandler;
+        $this->deployHookToken       = $deployHookToken;
+        $this->repositoryOwner       = $repositoryOwner;
+        $this->repositoryName        = $repositoryName;
+        $this->slackChangelogChannel = $slackChangelogChannel;
     }
 
     /**
@@ -42,12 +51,12 @@ class HerokuController extends AbstractController
     {
         $token = $request->query->get('token');
 
-        if (!$token || $token !== getenv('HEROKU_DEPLOY_HOOK_TOKEN')) {
+        if (!$token || $token !== $this->deployHookToken) {
             throw new UnauthorizedHttpException('Wrong of missing token');
         }
 
-        $repositoryOwner = getenv('GITHUB_REPOSITORY_OWNER');
-        $repositoryName  = getenv('GITHUB_REPOSITORY_NAME');
+        $repositoryOwner = $this->repositoryOwner;
+        $repositoryName  = $this->repositoryName;
 
         $requestBag = $request->request;
 
@@ -59,7 +68,7 @@ class HerokuController extends AbstractController
         $commits = $this->changelogHandler->getOrderedChangelog($prev_head, $head);
 
         $this->slack->filesUpload([
-            'channels'        => getenv('SLACK_CHANGELOG_CHANNEL'),
+            'channels'        => $this->slackChangelogChannel,
             'content'         => implode(PHP_EOL, $commits),
             'title'           => 'Changelog for release ' . $release,
             'filename'        => 'changelog_release_' . $release . '.txt',
