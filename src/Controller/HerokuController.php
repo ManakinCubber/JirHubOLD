@@ -7,6 +7,7 @@ use JoliCode\Slack\Api\Client as SlackClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class HerokuController extends AbstractController
@@ -39,6 +40,12 @@ class HerokuController extends AbstractController
      */
     public function herokuDeployHookAction(Request $request): Response
     {
+        $token = $request->query->get('token');
+
+        if (!$token || $token !== getenv('HEROKU_DEPLOY_HOOK_TOKEN')) {
+            throw new UnauthorizedHttpException('Wrong of missing token');
+        }
+
         $repositoryOwner = getenv('GITHUB_REPOSITORY_OWNER');
         $repositoryName  = getenv('GITHUB_REPOSITORY_NAME');
 
