@@ -24,9 +24,9 @@ final class UpdatePullRequestTitleCommand implements SynchronizationCommandInter
         PullRequestLabelRepository $pullRequestLabelRepository,
         LoggerInterface $logger
     ) {
-        $this->pullRequestRepository = $pullRequestRepository;
+        $this->pullRequestRepository      = $pullRequestRepository;
         $this->pullRequestLabelRepository = $pullRequestLabelRepository;
-        $this->logger                = $logger;
+        $this->logger                     = $logger;
     }
 
     public function execute(JirHubTask $jirHubTask): void
@@ -57,7 +57,7 @@ final class UpdatePullRequestTitleCommand implements SynchronizationCommandInter
                     $pullRequest,
                     $label
                 );
-    
+
                 $this->logger->info(
                     sprintf(
                         'Added label %s to pull request #%d',

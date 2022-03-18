@@ -32,7 +32,7 @@ final class UpdatePullRequestDescriptionCommand implements SynchronizationComman
             $bodyPrefix = $jirHubTask->getJiraIssue()->getUri()->__toString();
         }
 
-        if (false === strpos($pullRequestBody, $bodyPrefix)) {
+        if (false === mb_strpos($pullRequestBody, $bodyPrefix)) {
             $this->pullRequestRepository->update(
                 $jirHubTask->getGithubPullRequest(),
                 [PullRequestUpdatableFields::BODY => $bodyPrefix . "\n\n" . $pullRequestBody]

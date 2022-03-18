@@ -81,7 +81,7 @@ class SynchronizationHandler
         $this->cache->deleteItem(DashboardHandler::CACHE_KEY);
         $this->cache->deleteItem(PullRequestRepository::DEFAULT_LIST);
 
-        if (0 === strpos($pullRequest->getTitle(), self::RELEASE_PR_TITLE_PREFIX)) {
+        if (0 === mb_strpos($pullRequest->getTitle(), self::RELEASE_PR_TITLE_PREFIX)) {
             return;
         }
 

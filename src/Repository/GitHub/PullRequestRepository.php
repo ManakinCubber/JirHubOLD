@@ -124,7 +124,7 @@ class PullRequestRepository
 
         foreach ($pullRequests as $key => $pullRequest) {
             if (\array_key_exists(PullRequestSearchFilters::TITLE, $parameters)
-                && false === strpos($pullRequest->getTitle(), $parameters[PullRequestSearchFilters::TITLE])
+                && false === mb_strpos($pullRequest->getTitle(), $parameters[PullRequestSearchFilters::TITLE])
             ) {
                 unset($pullRequests[$key]);
 
@@ -140,7 +140,7 @@ class PullRequestRepository
             }
 
             if (\array_key_exists(PullRequestSearchFilters::HEAD_REF, $parameters)
-                && false === strpos($pullRequest->getHeadRef(), $parameters[PullRequestSearchFilters::HEAD_REF])
+                && false === mb_strpos($pullRequest->getHeadRef(), $parameters[PullRequestSearchFilters::HEAD_REF])
             ) {
                 unset($pullRequests[$key]);
 
@@ -148,7 +148,7 @@ class PullRequestRepository
             }
 
             if (\array_key_exists(PullRequestSearchFilters::BASE_REF, $parameters)
-                && false === strpos($pullRequest->getBaseRef(), $parameters[PullRequestSearchFilters::BASE_REF])
+                && false === mb_strpos($pullRequest->getBaseRef(), $parameters[PullRequestSearchFilters::BASE_REF])
             ) {
                 unset($pullRequests[$key]);
 

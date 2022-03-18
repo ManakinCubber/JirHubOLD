@@ -33,19 +33,19 @@ class HerokuHandler
 
     private function isAppManageable(string $appName): bool
     {
-        if ('chronos' !== substr($appName, 0, 7)) {
+        if ('chronos' !== mb_substr($appName, 0, 7)) {
             return false;
         }
 
-        if (false !== strpos($appName, 'development')) {
+        if (false !== mb_strpos($appName, 'development')) {
             return false;
         }
 
-        if (false !== strpos($appName, 'staging')) {
+        if (false !== mb_strpos($appName, 'staging')) {
             return false;
         }
 
-        if (false !== strpos($appName, 'production')) {
+        if (false !== mb_strpos($appName, 'production')) {
             return false;
         }
 

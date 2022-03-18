@@ -65,7 +65,7 @@ class JiraClient
             return null;
         }
 
-        if (0 !== strpos($response->getHeaders()['content-type'][0], 'application/json')) {
+        if (0 !== mb_strpos($response->getHeaders()['content-type'][0], 'application/json')) {
             throw new UnexpectedContentType();
         }
 
