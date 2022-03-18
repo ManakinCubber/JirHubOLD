@@ -73,6 +73,8 @@ class ChangelogHandler
             $commits[] = $commit;
         }
 
+        natsort($plSections);
+
         $messages = [];
 
         foreach ($plSections as $plSection) {
