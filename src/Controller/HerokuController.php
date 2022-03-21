@@ -5,11 +5,11 @@ namespace App\Controller;
 use App\Handler\ChangelogHandler;
 use JoliCode\Slack\Api\Client as SlackClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 class HerokuController extends AbstractController
 {
@@ -37,7 +37,7 @@ class HerokuController extends AbstractController
         $this->repositoryOwner       = $repositoryOwner;
         $this->repositoryName        = $repositoryName;
         $this->slackChangelogChannel = $slackChangelogChannel;
-        $this->cache = new FilesystemAdapter();
+        $this->cache                 = new FilesystemAdapter();
     }
 
     /**
