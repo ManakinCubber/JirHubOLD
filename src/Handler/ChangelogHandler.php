@@ -107,9 +107,11 @@ class ChangelogHandler
         }
 
         if (\count($commits) > 0) {
-            $messages[] = 'Autres';
-            $messages[] = '------';
-            $messages   = array_merge($messages, array_column($commits, 'message'));
+            if (\count($messages) > 0) {
+                $messages[] = 'Autres';
+                $messages[] = '------';
+            }
+            $messages = array_merge($messages, array_column($commits, 'message'));
         }
 
         if (\count($messages) > 0 && null === $messages[\count($messages) - 1]) {
