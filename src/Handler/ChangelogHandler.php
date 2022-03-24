@@ -59,7 +59,7 @@ class ChangelogHandler
 
         foreach ($messages as $message) {
             $commit = ['message' => trim($message), 'labels' => []];
-            preg_match('/\(#(\d+)\)$/', $message, $matches);
+            preg_match('/\(?#(\d+)\)?$/', $message, $matches);
 
             if (isset($matches[1])) {
                 $commit['labels'] = $this->_getPullRequestLabels($matches[1]);
