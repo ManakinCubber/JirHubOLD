@@ -9,3 +9,4 @@ services:
 imports:
   - { resource: services/app.yaml }
   - { resource: services/tma.yaml }
+  - { resource: services/amqp.yaml }
