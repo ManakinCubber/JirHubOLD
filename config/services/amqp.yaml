@@ -1,0 +1,10 @@
+parameters:
+  amqp.dsn: '%env(AMQP_DSN)%'
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  App\AMQP\RecordAMQPMetricsCommand:
