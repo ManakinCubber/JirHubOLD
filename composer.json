@@ -42,7 +42,11 @@
         "preferred-install": {
             "*": "dist"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "symfony/flex": false,
+            "phpro/grumphp": true
+        }
     },
     "autoload": {
         "psr-4": {
