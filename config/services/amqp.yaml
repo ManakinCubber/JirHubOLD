@@ -5,6 +5,8 @@ services:
     public: false
 
   App\AMQP\RecordAMQPMetricsCommand:
+    arguments:
+      $index: '%env(AMQP_ELASTICSEARCH_INDEX)%'
 
   App\AMQP\Repository\AMQPQueueMetricsRepository:
     arguments:
