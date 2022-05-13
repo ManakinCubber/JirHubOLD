@@ -28,3 +28,11 @@ framework:
 
         # APCu (not recommended with heavy random-write workloads as memory fragmentation can cause perf issues)
         #app: cache.adapter.apcu
+
+    http_client:
+        scoped_clients:
+            amqp.client:
+                base_uri: '%env(AMQP_HOST)%'
+                auth_basic: '%env(AMQP_MONITORING_USER)%:%env(AMQP_MONITORING_PASSWORD)%'
+                headers:
+                    Accept: 'application/json'
