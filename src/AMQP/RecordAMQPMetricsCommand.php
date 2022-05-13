@@ -22,8 +22,8 @@ class RecordAMQPMetricsCommand extends Command
         parent::__construct();
 
         $this->AMQPQueueMetricsRepository = $AMQPQueueMetricsRepository;
-        $this->elasticsearchClient = $elasticsearchClient;
-        $this->index = $index;
+        $this->elasticsearchClient        = $elasticsearchClient;
+        $this->index                      = $index;
     }
 
     protected function configure()

@@ -13,12 +13,13 @@ class AMQPQueueMetricsRepository
     public function __construct(HttpClientInterface $amqpClient, string $vhost)
     {
         $this->httpClient = $amqpClient;
-        $this->vhost = $vhost;
+        $this->vhost      = $vhost;
     }
 
     public function getQueuesMetrics(): string
     {
-        $response = $this->httpClient->request(Request::METHOD_GET, '/api/queues/'.$this->vhost);
+        $response = $this->httpClient->request(Request::METHOD_GET, '/api/queues/' . $this->vhost);
+
         return $response->getContent();
     }
 }
