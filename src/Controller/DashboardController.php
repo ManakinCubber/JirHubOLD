@@ -3,20 +3,22 @@
 namespace App\Controller;
 
 use App\Dashboard\Handler\DashboardHandler;
+use App\Handler\ChangelogHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DashboardController extends AbstractController
 {
     /** @var DashboardHandler */
-    protected $handler;
+    protected $dashboardHandler;
 
-    /**
-     * DashboardController constructor.
-     */
-    public function __construct(DashboardHandler $handler)
+    /** @var ChangelogHandler */
+    protected $changelogHandler;
+
+    public function __construct(DashboardHandler $dashboardHandler, ChangelogHandler $changelogHandler)
     {
-        $this->handler = $handler;
+        $this->dashboardHandler = $dashboardHandler;
+        $this->changelogHandler = $changelogHandler;
     }
 
     /**
@@ -24,6 +26,12 @@ class DashboardController extends AbstractController
      */
     public function index()
     {
-        return $this->render('dashboard/index.html.twig', $this->handler->getData());
+        return $this->render(
+            'dashboard/index.html.twig',
+            array_merge(
+                $this->dashboardHandler->getData(),
+                $this->changelogHandler->getChangelogWithLinks('master', 'dev')
+            )
+        );
     }
 }

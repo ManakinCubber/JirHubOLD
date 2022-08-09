@@ -6,8 +6,9 @@ class OutdatedFileToTable
 {
     public function composerOutdatedTable(string $path): array
     {
-        $content = json_decode(file_get_contents($path), true);
-        $tab[]   = '';
+        $content = json_decode(file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
+
+        $tab[] = '';
 
         foreach ($content['installed'] as $value) {
             $name          = $value['name'];

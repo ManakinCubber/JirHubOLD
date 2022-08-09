@@ -5,11 +5,10 @@
 
 	<section class="section">
 		<div style="position:absolute;top:15px;right:15px">
-			<a href="/commits" class="button is-normal" style="display:block;margin-bottom:5px">view current changelog</a>
 			<a href="/changelog" class="button is-normal" style="display:block">view current changelog (raw)</a>
 		</div>
 
-		<div class="container">
+		<div class="container is-fluid">
 
 			<h1 class="title has-text-centered">JIRHUB STATUS</h1>
 
@@ -19,143 +18,193 @@
 						{% set free = env.jirHubTask is null %}
 
 						<div class="tile is-parent">
-							<div class="tile is-child env {{ env.name }} {% if free %} free {% endif %}">
-								{% if free %}
-									<span class="is-center">DISPONIBLE</span>
-									{% if env.owner is not null %}
-										<span class="is-center env-owner">{{ env.owner }}</span>
-									{% endif %}
-									<button class="button" disabled>Déployer</button>
+							<div class="tile is-child box env {{ env.name }} {% if free %} free {% endif %}">
 
+								{% if free %}
+									<div>
+										<p class="subtitle is-size-4">Disponible</p>
+										{% if env.owner is not null %}
+											<p class="subtitle is-size-6">{{ env.owner }}</p>
+										{% endif %}
+									</div>
 								{% else %}
 
-									<div class="quick-links dropdown is-right is-hoverable">
-										<div class="dropdown-trigger">
+									<div class="level">
+										<div class="level-left">
+											<div class="level-item">
+												<div>
+													{% if env.jirHubTask.getJiraIssue is not null %}
+														<p class="subtitle is-size-4">{{ env.jirHubTask.getJiraIssue.getKey|upper }}</p>
+													{% else %}
+														<p class="subtitle is-size-4">Unknown Jira Ticket</p>
+													{% endif %}
+													<p class="is-size-6">{{ env.owner }}</p>
+												</div>
+											</div>
+										</div>
+
+										<div class="level-right">
+											<div class="level-item">
+												<div class="quick-links dropdown is-hoverable">
+													<div class="dropdown-trigger">
 											<span class="icon is-size-5" aria-haspopup="true" aria-controls="dropdown-menu">
 												<i class="fas fa-ellipsis-h"></i>
 											</span>
-										</div>
-										<div class="dropdown-menu" id="dropdown-menu" role="menu">
-											<div class="dropdown-content">
-												<a href="http://tiime-{{ env.name }}.s3-website-eu-west-1.amazonaws.com" class="dropdown-item" target="_blank">
-													Open the
-													{{ env.name }}
-													Tiime Apps
-												</a>
-												<a href="http://tiime-expert-{{ env.name }}.s3-website-eu-west-1.amazonaws.com" class="dropdown-item" target="_blank">
-													Open the
-													{{ env.name }}
-													Tiime Expert
-												</a>
-												<a href="http://tiime-pro-{{ env.name }}.s3-website-eu-west-1.amazonaws.com" class="dropdown-item" target="_blank">
-													Open the
-													{{ env.name }}
-													Tiime Pulse
-												</a>
-												<a href="http://tiime-data-{{ env.name }}.s3-website-eu-west-1.amazonaws.com" class="dropdown-item" target="_blank">
-													Open the
-													{{ env.name }}
-													Tiime Data
-												</a>
-												<a href="http://tiime-care-{{ env.name }}.s3-website-eu-west-1.amazonaws.com" class="dropdown-item" target="_blank">
-													Open the
-													{{ env.name }}
-													Tiime Care
-												</a>
-												<div class="dropdown-divider"></div>
-												<a href="https://dashboard.heroku.com/apps/chronos-api-review-{{ env.name }}" class="dropdown-item" target="_blank">
-													Open the
-													{{ env.name }}
-													Heroku Dashboard
-												</a>
+													</div>
+													<div class="dropdown-menu" id="dropdown-menu" role="menu">
+														<div class="dropdown-content">
+															<a href="http://tiime-{{ env.name }}.s3-website-eu-west-1.amazonaws.com" class="dropdown-item" target="_blank">
+																Open the
+																{{ env.name }}
+																Tiime Apps
+															</a>
+															<a href="http://tiime-expert-{{ env.name }}.s3-website-eu-west-1.amazonaws.com" class="dropdown-item" target="_blank">
+																Open the
+																{{ env.name }}
+																Tiime Expert
+															</a>
+															<a href="http://tiime-pro-{{ env.name }}.s3-website-eu-west-1.amazonaws.com" class="dropdown-item" target="_blank">
+																Open the
+																{{ env.name }}
+																Tiime Pulse
+															</a>
+															<a href="http://tiime-data-{{ env.name }}.s3-website-eu-west-1.amazonaws.com" class="dropdown-item" target="_blank">
+																Open the
+																{{ env.name }}
+																Tiime Data
+															</a>
+															<a href="http://tiime-care-{{ env.name }}.s3-website-eu-west-1.amazonaws.com" class="dropdown-item" target="_blank">
+																Open the
+																{{ env.name }}
+																Tiime Care
+															</a>
+															<div class="dropdown-divider"></div>
+															<a href="https://dashboard.heroku.com/apps/chronos-api-review-{{ env.name }}" class="dropdown-item" target="_blank">
+																Open the
+																{{ env.name }}
+																Heroku Dashboard
+															</a>
+														</div>
+													</div>
+												</div>
 											</div>
 										</div>
 									</div>
 
-									{% if env.jirHubTask.getJiraIssue is not null %}
-										<span class="ta-number">{{ env.jirHubTask.getJiraIssue.getKey|upper }}</span>
-									{% else %}
-										<span class="ta-number">Unknown Jira Ticket</span>
-									{% endif %}
-									<span class="ta-title">{{ env.pullRequestTitle }}</span>
-
 									<div class="links">
 										{% if env.jirHubTask.getJiraIssue is not null %}
-											<span class="jira">
+											<span class="jira is-right">
 												<a target="_blank" href="{{ env.jirHubTask.getJiraIssue.getUri }}">
 													<i class="fab fa-jira"></i>
 												</a>
 											</span>
 										{% endif %}
-										<span class="github">
+										<span class="github  is-right">
 											<a target="_blank" href="{{ env.jirHubTask.githubPullRequest.getUrl }}">
 												<i class="fab fa-github"></i>
 											</a>
 										</span>
 									</div>
+
+
+
+									<p class="is-center has-text-centered ">{{ env.pullRequestTitle }}</p>
+
 								{% endif %}
 							</div>
 						</div>
 					{% endfor %}
 				</div>
 			</section>
+		</div>
 
-			<section>
-				<h2 class="is-size-4 is-bold">Pull requests à déployer en validation :</h2>
+		<div class="container">
+			<div class="columns">
+				<div class="column">
+					<section class="box">
+						<h2 class="is-size-4 is-bold">Pull requests à valider</h2>
 
-				<ul>
-					{% for pullRequest in pull_requests_to_deploy %}
-						<li class="pull_requests">
-							{% if 'Standby' in pullRequest.labels %}
-								<span class="tag is-warning">Standby</span>
-							{% endif %}
-							{% if 'WAIT' in pullRequest.labels %}
-								<span class="tag is-danger">WAIT</span>
-							{% endif %}
+						<ul class="pull_requests_list">
+							{% for pullRequest in pull_requests_to_deploy %}
+								<li class="pull_requests">
+									{% if 'Standby' in pullRequest.labels %}
+										<span class="tag is-warning">Standby</span>
+									{% endif %}
+									{% if 'WAIT' in pullRequest.labels %}
+										<span class="tag is-danger">WAIT</span>
+									{% endif %}
 
-							{{ pullRequest.getTitle }}
-							<a target="_blank" href="{{ pullRequest.getUrl }}">
-								<i class="fab fa-github"></i>
-							</a>
+									{{ pullRequest.getTitle }}
+									<a target="_blank" href="{{ pullRequest.getUrl }}">
+										<i class="fab fa-github"></i>
+									</a>
 
-							{% if pullRequest.getJiraIssue is not null %}
-								<a target="_blank" href="{{ pullRequest.getJiraIssue.getUri }}">
-									<i class="fab fa-jira"></i>
-								</a>
-							{% endif %}
-						</li>
-					{% endfor %}
-				</ul>
-			</section>
+									{% if pullRequest.getJiraIssue is not null %}
+										<a target="_blank" href="{{ pullRequest.getJiraIssue.getUri }}">
+											<i class="fab fa-jira"></i>
+										</a>
+									{% endif %}
+								</li>
+							{% endfor %}
+						</ul>
+					</section>
+				</div>
+				<div class="column">
+					<section class="box ">
+						<h2 class="is-size-4 is-bold">Pull requests à merger</h2>
 
-			<section>
-				<h2 class="is-size-4 is-bold">Pull requests à merger :</h2>
+						<ul class="pull_requests_list">
+							{% for pullRequest in pull_requests_to_merge_on_dev %}
+								<li class="pull_requests">
+									{% if 'Standby' in pullRequest.labels %}
+										<span class="tag is-warning">Standby</span>
+									{% endif %}
+									{% if 'WAIT' in pullRequest.labels %}
+										<span class="tag is-danger">WAIT</span>
+									{% endif %}
 
-				<ul>
-					{% for pullRequest in pull_requests_to_merge_on_dev %}
-						<li class="pull_requests">
-							{% if 'Standby' in pullRequest.labels %}
-								<span class="tag is-warning">Standby</span>
-							{% endif %}
-							{% if 'WAIT' in pullRequest.labels %}
-								<span class="tag is-danger">WAIT</span>
-							{% endif %}
+									{{ pullRequest.getTitle }}
+									<a target="_blank" href="{{ pullRequest.getUrl }}">
+										<i class="fab fa-github"></i>
+									</a>
 
-							{{ pullRequest.getTitle }}
-							<a target="_blank" href="{{ pullRequest.getUrl }}">
-								<i class="fab fa-github"></i>
-							</a>
+									{% if pullRequest.getJiraIssue is not null %}
+										<a target="_blank" href="{{ pullRequest.getJiraIssue.getUri }}">
+											<i class="fab fa-jira"></i>
+										</a>
+									{% endif %}
+								</li>
+							{% endfor %}
+						</ul>
+					</section>
+				</div>
 
-							{% if pullRequest.getJiraIssue is not null %}
-								<a target="_blank" href="{{ pullRequest.getJiraIssue.getUri }}">
-									<i class="fab fa-jira"></i>
-								</a>
-							{% endif %}
-						</li>
-					{% endfor %}
-				</ul>
-			</section>
+				<div class="column">
+					<section class="box">
+						<h2 class="is-size-4 is-bold">Changelog <em>(prochaine MEP)</em></h2>
+
+						<ul class="pull_requests_list">
+							{% for i in 0..(num-1) %}
+								{% if type[i]=='string' and not (messageLinks[i] starts with '---') %}
+									<li class="pull_requests has-text-weight-bold">{{messageLinks[i]}}</li>
+								{% endif %}
+								{% if type[i]=='array'  %}
+									<li class="pull_requests">
+										<span class="ta-title">{{messageLinks[i]['message']}}</span>
+										<span class="github">
+											<a target="_blank" href="{{ messageLinks[i]['html_url'] }}">
+												<i class="fab fa-github"></i>
+											</a>
+										</span>
+									</li>
+								{% endif %}
+							{% endfor %}
+						</ul>
+					</section>
+				</div>
+			</div>
 
 		</div>
+
 	</section>
 {% endblock body %}

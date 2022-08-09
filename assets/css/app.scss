@@ -1,21 +1,27 @@
 @use "sass:map";
 
-$light: #BFCEE1;
+$light: #fff;
+$medium: #7a7a7a;
 $dark: #142439;
 
+
 $validation-env-colors: (
-  "green": #7DFCAC,
-  "red": #e74c3c,
-  "blue": #54CEFF,
-  "yellow": #FFD366,
-  "pink": #ff7483,
+  "blue": #0088DC,
+  "teal": #008080,
+  "green": #9ACD32,
+  "yellow": #FFD300,
+  "orange": #FF6600,
+  "red": #ED2939,
+  "pink": #FF69B4,
+  "purple": #69359C,
+  "gray": #808080,
 );
 
 html {
   background-color: $dark !important;
 
   section {
-    color: $light;
+    color: $medium;
 
     h1 {
       color: $light !important;
@@ -32,29 +38,32 @@ html {
         border-radius: 4px;
         padding: 1rem 2rem 1rem 1.5rem;
         border-style: solid;
-        display: flex !important;
-        flex-flow: column wrap !important;
-        justify-content: space-around !important;
-        align-items: center !important;
         min-height: 230px;
 
         * {
+          color: $light;
+        }
+
+        a {
           color: $dark;
         }
 
-        .links {
-          display: flex;
-          justify-content: center;
+        .level {
+          margin-bottom: 0;
+        }
 
+        .links {
+          margin-bottom: 20px;
           span {
-            margin: 15px 10px;
+            margin: 15px 10px 15px 0;
 
             a {
-              font-size: 2rem;
-              color: $light;
+              font-size: 1.2rem;
+              color: $dark;
 
               i {
                 padding: 0.5rem;
+                padding-left: 0;
                 border-radius: 4px;
               }
 
@@ -98,24 +107,15 @@ html {
           }
         }
 
-        .ta-number {
-          font-size: 2rem;
-          margin-bottom: 10px;
-        }
-
-        .ta-title {
-          text-align: center;
-        }
-
         .quick-links {
           align-self: flex-end;
         }
-        
-        .env-owner {
-          font-style: italic;
-          font-size: .8rem;
-          color: #445469 !important;
-        }
+      }
+
+      .pull_requests_list {
+        list-style: none;
+        padding-left:0px;
+        font-size:.8rem;
       }
 
       .pull_requests {
@@ -131,7 +131,7 @@ html {
       ul {
         list-style: disc outside none;
         li{
-          margin: 8px 0;
+          margin: 18px 0;
         }
       }
     }
