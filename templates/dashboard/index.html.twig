@@ -22,7 +22,7 @@
 
 								{% if free %}
 									<div>
-										<p class="subtitle is-size-4">Disponible</p>
+										<p class="subtitle is-size-4">{% if env.name == 'orange' %}Bientôt {% endif %}Disponible</p>
 										{% if env.owner is not null %}
 											<p class="subtitle is-size-6">{{ env.owner }}</p>
 										{% endif %}
