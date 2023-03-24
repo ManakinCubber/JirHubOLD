@@ -86,7 +86,11 @@ html {
           &.#{$env} {
             background-color: $color;
             border-color: $color;
-            color: #fff;
+            @if $env == "white" {
+              color: #000;
+            } @else {
+              color: #fff;
+            }
 
             &.free {
               * {
@@ -96,7 +100,11 @@ html {
               .button {
                 background-color: $color;
                 border-color: $color;
-                color: #ffffff;
+                @if $env == "white" {
+                  color: #000;
+                } @else {
+                  color: #fff;
+                }
               }
             }
           }
