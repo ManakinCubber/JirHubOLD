@@ -9,7 +9,7 @@ parameters:
   github.labels:
     in_progress:             '%github.labels.in_progress%'
     validated:               '~validated'
-    validation_environments: ['~validation-blue', '~validation-red', '~validation-green', '~validation-yellow', '~validation-pink', '~validation-orange', '~validation-purple', '~validation-grey']
+    validation_environments: ['~validation-blue', '~validation-red', '~validation-green', '~validation-yellow', '~validation-pink', '~validation-orange', '~validation-purple', '~validation-grey', '~validation-black', '~validation-white', '~validation-teal', '~validation-brown']
     validation_prefix:       '~validation-'
     validation_required:     '%github.labels.validation_required%'
   github.approve_count:       1
