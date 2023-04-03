@@ -3,7 +3,6 @@
 namespace App\Handler;
 
 use App\External\HerokuApi;
-use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;

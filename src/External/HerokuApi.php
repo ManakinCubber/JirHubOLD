@@ -13,8 +13,7 @@ readonly class HerokuApi
 {
     public function __construct(
         private HttpClientInterface $herokuClient
-    )
-    {
+    ) {
     }
 
     /**
@@ -27,7 +26,7 @@ readonly class HerokuApi
     {
         $res = $this->herokuClient->request(
             Request::METHOD_PATCH,
-            'apps/' . $appName . '/formation/' . $formationType,
+            'apps/'.$appName.'/formation/'.$formationType,
             [
                 'json' => [
                     'quantity' => $quantity,
