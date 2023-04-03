@@ -10,8 +10,8 @@ jobs:
       - name: ⚙️ Provisioning PHP and Composer
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.4
-          tools: composer:2.1
+          php-version: 8.2
+          tools: composer:2.5
         env:
           update: true
 
