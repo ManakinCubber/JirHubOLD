@@ -7,13 +7,9 @@ use App\Model\Github\PullRequest;
 
 class ValidationInProgress extends Validation
 {
-    /** @var string */
-    private $validator;
-
-    public function __construct(PullRequest $pullRequest, string $reviewEnvironment, ?string $jiraIssueKey, string $validator)
+    public function __construct(PullRequest $pullRequest, string $reviewEnvironment, ?string $jiraIssueKey, private readonly string $validator)
     {
         parent::__construct($pullRequest, $reviewEnvironment, $jiraIssueKey);
-        $this->validator = $validator;
     }
 
     public function normalizeStep(): array
@@ -24,26 +20,26 @@ class ValidationInProgress extends Validation
                 'text' => ['type' => 'mrkdwn', 'text' => ":male-detective: Validation en cours par @{$this->validator}"],
             ],
             [
-                'type'     => 'actions',
+                'type' => 'actions',
                 'elements' => [
                     [
-                        'type'      => 'button',
-                        'text'      => ['type' => 'plain_text', 'text' => 'Approuver', 'emoji' => false],
+                        'type' => 'button',
+                        'text' => ['type' => 'plain_text', 'text' => 'Approuver', 'emoji' => false],
                         'action_id' => SlackHandler::ACTION_VALIDATION_APPROVE,
-                        'style'     => 'primary',
-                        'value'     => json_encode([
-                            'pull_request'   => $this->pullRequest->normalize(),
+                        'style' => 'primary',
+                        'value' => json_encode([
+                            'pull_request' => $this->pullRequest->normalize(),
                             'validation_env' => $this->reviewEnvironment,
                             'jira_issue_key' => $this->jiraIssueKey,
                         ]),
                     ],
                     [
-                        'type'      => 'button',
-                        'text'      => ['type' => 'plain_text', 'text' => 'Rejeter', 'emoji' => false],
+                        'type' => 'button',
+                        'text' => ['type' => 'plain_text', 'text' => 'Rejeter', 'emoji' => false],
                         'action_id' => SlackHandler::ACTION_VALIDATION_REJECT,
-                        'style'     => 'danger',
-                        'value'     => json_encode([
-                            'pull_request'   => $this->pullRequest->normalize(),
+                        'style' => 'danger',
+                        'value' => json_encode([
+                            'pull_request' => $this->pullRequest->normalize(),
                             'validation_env' => $this->reviewEnvironment,
                             'jira_issue_key' => $this->jiraIssueKey,
                         ]),

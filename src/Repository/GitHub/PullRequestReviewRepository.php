@@ -6,35 +6,19 @@ use App\Client\GitHubClient;
 use App\Factory\PullRequestReviewFactory;
 use App\Model\Github\PullRequest;
 
-class PullRequestReviewRepository
+readonly class PullRequestReviewRepository
 {
-    /** @var GitHubClient */
-    private $client;
-
-    /** @var string */
-    private $repositoryOwner;
-
-    /** @var string */
-    private $repositoryName;
-
-    /** @var PullRequestReviewFactory */
-    private $pullRequestReviewFactory;
-
     public function __construct(
-        GitHubClient $client,
-        string $repositoryOwner,
-        string $repositoryName,
-        PullRequestReviewFactory $pullRequestReviewFactory
+        private GitHubClient $client,
+        private string $repositoryOwner,
+        private string $repositoryName,
+        private PullRequestReviewFactory $pullRequestReviewFactory
     ) {
-        $this->client                   = $client;
-        $this->repositoryOwner          = $repositoryOwner;
-        $this->repositoryName           = $repositoryName;
-        $this->pullRequestReviewFactory = $pullRequestReviewFactory;
     }
 
     public function search(PullRequest $pullRequest, array $parameters = []): array
     {
-        $reviews       = [];
+        $reviews = [];
         $apiParameters = [
             'per_page' => 50,
         ];

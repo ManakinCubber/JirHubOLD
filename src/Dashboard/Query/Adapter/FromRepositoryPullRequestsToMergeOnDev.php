@@ -8,12 +8,8 @@ use App\Repository\GitHub\PullRequestRepository;
 
 class FromRepositoryPullRequestsToMergeOnDev implements PullRequestsToMergeOnDev
 {
-    /** @var PullRequestRepository */
-    protected $pullRequestRepository;
-
-    public function __construct(PullRequestRepository $pullRequestRepository)
+    public function __construct(private readonly PullRequestRepository $pullRequestRepository)
     {
-        $this->pullRequestRepository = $pullRequestRepository;
     }
 
     public function fetch(): array

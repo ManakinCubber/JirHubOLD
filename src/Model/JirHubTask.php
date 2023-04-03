@@ -4,18 +4,12 @@ namespace App\Model;
 
 use App\Model\Github\PullRequest;
 
-class JirHubTask
+readonly class JirHubTask
 {
-    /** @var PullRequest */
-    private $githubPullRequest;
-
-    /** @var JiraIssue|null */
-    private $jiraIssue;
-
-    public function __construct(PullRequest $githubPullRequest, ?JiraIssue $jiraIssue = null)
-    {
-        $this->githubPullRequest = $githubPullRequest;
-        $this->jiraIssue         = $jiraIssue;
+    public function __construct(
+        private PullRequest $githubPullRequest,
+        private ?JiraIssue $jiraIssue = null
+    ) {
     }
 
     public function getGithubPullRequest(): PullRequest

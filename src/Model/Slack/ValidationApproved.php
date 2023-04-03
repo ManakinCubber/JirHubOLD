@@ -6,13 +6,9 @@ use App\Model\Github\PullRequest;
 
 class ValidationApproved extends Validation
 {
-    /** @var string */
-    private $validator;
-
-    public function __construct(PullRequest $pullRequest, string $reviewEnvironment, ?string $jiraIssueKey, string $validator)
+    public function __construct(PullRequest $pullRequest, string $reviewEnvironment, ?string $jiraIssueKey, private readonly string $validator)
     {
         parent::__construct($pullRequest, $reviewEnvironment, $jiraIssueKey);
-        $this->validator = $validator;
     }
 
     public function normalizeStep(): array

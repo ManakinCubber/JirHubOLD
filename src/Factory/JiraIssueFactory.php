@@ -7,13 +7,10 @@ use App\Model\JiraIssueStatus;
 use App\Model\JiraIssueType;
 use GuzzleHttp\Psr7\Uri;
 
-class JiraIssueFactory
+readonly class JiraIssueFactory
 {
-    private string $host;
-
-    public function __construct(string $host)
+    public function __construct(private string $host)
     {
-        $this->host = $host;
     }
 
     public function create(array $issueData): JiraIssue

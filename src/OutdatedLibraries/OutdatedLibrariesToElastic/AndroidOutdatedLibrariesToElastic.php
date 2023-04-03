@@ -3,26 +3,21 @@
 namespace App\OutdatedLibraries\OutdatedLibrariesToElastic;
 
 use App\OutdatedLibraries\OutdatedLibrariesToElastic\ElasticInput\AndroidOutdated;
-use Elasticsearch\Client;
+use Elastic\Elasticsearch\Client;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'android:outdated-libraries')]
 class AndroidOutdatedLibrariesToElastic extends Command
 {
-    /** @var string */
-    protected static $defaultName = 'android:outdated-libraries';
-
-    private Client $elasticsearchClient;
-    private AndroidOutdated $AndroidOutdated;
-
-    public function __construct(AndroidOutdated $AndroidOutdated, Client $elasticsearchClient)
-    {
+    public function __construct(
+        private readonly AndroidOutdated $AndroidOutdated,
+        private readonly Client $elasticsearchClient
+    ) {
         parent::__construct();
-
-        $this->AndroidOutdated     = $AndroidOutdated;
-        $this->elasticsearchClient = $elasticsearchClient;
     }
 
     protected function configure()
@@ -37,7 +32,7 @@ class AndroidOutdatedLibrariesToElastic extends Command
         $name = $input->getArgument('name');
 
         if ($this->verifyNameAndroid($name)) {
-            $json   = $this->AndroidOutdated->getAndroidJson($input->getArgument('path'), $name);
+            $json = $this->AndroidOutdated->getAndroidJson($input->getArgument('path'), $name);
             $params = ['index' => 'tiime-chronos-outdated-libraries', 'body' => $json];
 
             $this->elasticsearchClient->index($params);

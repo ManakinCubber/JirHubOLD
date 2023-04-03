@@ -9,18 +9,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ChangelogController extends AbstractController
 {
-    /** @var ChangelogHandler */
-    private $handler;
-
-    public function __construct(ChangelogHandler $handler)
-    {
-        $this->handler = $handler;
+    public function __construct(
+        private readonly ChangelogHandler $handler
+    ) {
     }
 
-    /**
-     * @Route("/changelog", name="get_changelog", methods={"GET"})
-     */
-    public function index()
+    #[Route('/changelog', name: 'get_changelog', methods: ['GET'])]
+    public function index(): Response
     {
         $response = new Response(implode(PHP_EOL, $this->handler->getChangelog('master', 'dev')));
         $response->headers->set('Content-Type', 'text/plain');
@@ -28,10 +23,8 @@ class ChangelogController extends AbstractController
         return $response;
     }
 
-    /**
-     * @Route("/commits", name="commits", methods={"GET"})
-     */
-    public function commits()
+    #[Route('/commits', name: 'commits', methods: ['GET'])]
+    public function commits(): Response
     {
         return $this->render('dashboard/commits.html.twig', $this->handler->getChangelogWithLinks('master', 'dev'));
     }

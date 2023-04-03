@@ -7,20 +7,19 @@ use App\Model\Github\PullRequest;
 use App\Model\JirHubTask;
 use App\Repository\Jira\JiraIssueRepository;
 
-class JirHubTaskRepository
+readonly class JirHubTaskRepository
 {
-    private $jiraIssueRepository;
-
-    public function __construct(JiraIssueRepository $jiraIssueRepository)
-    {
-        $this->jiraIssueRepository = $jiraIssueRepository;
+    public function __construct(
+        private JiraIssueRepository $jiraIssueRepository,
+        private JiraHelper $jiraHelper
+    ) {
     }
 
     public function getJirHubTaskFromPullRequest(PullRequest $pullRequest): JirHubTask
     {
         $jiraIssue = null;
-        $key       = JiraHelper::extractIssueKeyFromString($pullRequest->getHeadRef())
-            ?? JiraHelper::extractIssueKeyFromString($pullRequest->getTitle());
+        $key = $this->jiraHelper->extractIssueKeyFromString($pullRequest->getHeadRef())
+            ?? $this->jiraHelper->extractIssueKeyFromString($pullRequest->getTitle());
 
         if (null !== $key) {
             try {

@@ -7,16 +7,10 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class PullRequestMergeFailureEvent extends Event
 {
-    /** @var PullRequest */
-    protected $pullRequest;
-
-    /** @var string */
-    protected $message;
-
-    public function __construct(PullRequest $pullRequest, string $message)
-    {
-        $this->pullRequest = $pullRequest;
-        $this->message     = $message;
+    public function __construct(
+        protected readonly PullRequest $pullRequest,
+        protected readonly string $message
+    ) {
     }
 
     public function getPullRequest(): PullRequest

@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr" data-bs-theme="dark">
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}JirHub{% endblock %}</title>
-        <link rel="stylesheet" href="{{ asset('build/app.css') }}">
-        {% block stylesheets %}{% endblock %}
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('main.css') }}">
+        {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-        <script src="{{ asset('build/runtime.js') }}"></script>
-        <script src="{{ asset('build/app.js') }}"></script>
+    {% block body %}{% endblock %}
+    {% block javascripts %}
+        <script src="{{ asset('main.js') }}"></script>
+    {% endblock %}
     </body>
 </html>

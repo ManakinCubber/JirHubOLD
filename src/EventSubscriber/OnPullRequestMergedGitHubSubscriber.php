@@ -7,18 +7,12 @@ use App\Handler\GitHubHandler;
 use App\Repository\GitHub\PullRequestLabelRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class OnPullRequestMergedGitHubSubscriber implements EventSubscriberInterface
+readonly class OnPullRequestMergedGitHubSubscriber implements EventSubscriberInterface
 {
-    /** @var GitHubHandler */
-    protected $gitHubHandler;
-
-    /** @var PullRequestLabelRepository */
-    protected $pullRequestLabelRepository;
-
-    public function __construct(GitHubHandler $gitHubHandler, PullRequestLabelRepository $pullRequestLabelRepository)
-    {
-        $this->gitHubHandler              = $gitHubHandler;
-        $this->pullRequestLabelRepository = $pullRequestLabelRepository;
+    public function __construct(
+        protected GitHubHandler $gitHubHandler,
+        protected PullRequestLabelRepository $pullRequestLabelRepository
+    ) {
     }
 
     public static function getSubscribedEvents()

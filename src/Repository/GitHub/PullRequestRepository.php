@@ -13,42 +13,18 @@ use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class PullRequestRepository
+readonly class PullRequestRepository
 {
-    const DEFAULT_LIST = 'default_pull_request_list';
-
-    /** @var CacheItemPoolInterface */
-    private $cache;
-
-    /** @var GitHubClient */
-    private $client;
-
-    /** @var string */
-    private $repositoryOwner;
-
-    /** @var string */
-    private $repositoryName;
-
-    /** @var PullRequestFactory */
-    private $pullRequestFactory;
-
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
+    public const DEFAULT_LIST = 'default_pull_request_list';
 
     public function __construct(
-        CacheItemPoolInterface $cache,
-        GitHubClient $client,
-        string $repositoryOwner,
-        string $repositoryName,
-        PullRequestFactory $pullRequestFactory,
-        EventDispatcherInterface $eventDispatcher
+        private CacheItemPoolInterface $cache,
+        private GitHubClient $client,
+        private string $repositoryOwner,
+        private string $repositoryName,
+        private PullRequestFactory $pullRequestFactory,
+        private EventDispatcherInterface $eventDispatcher
     ) {
-        $this->cache              = $cache;
-        $this->client             = $client;
-        $this->repositoryOwner    = $repositoryOwner;
-        $this->repositoryName     = $repositoryName;
-        $this->pullRequestFactory = $pullRequestFactory;
-        $this->eventDispatcher    = $eventDispatcher;
     }
 
     public function fetch($id): PullRequest
@@ -70,7 +46,7 @@ class PullRequestRepository
     public function search(array $parameters = []): array
     {
         $cacheDefaultList = false;
-        $pullRequests     = [];
+        $pullRequests = [];
 
         if (
             false === \array_key_exists(PullRequestSearchFilters::RESULTS_PER_PAGE, $parameters)
@@ -80,7 +56,7 @@ class PullRequestRepository
         }
 
         $apiParameters = [
-            PullRequestSearchFilters::STATE            => 'open',
+            PullRequestSearchFilters::STATE => 'open',
             PullRequestSearchFilters::RESULTS_PER_PAGE => 200,
         ];
 

@@ -12,45 +12,17 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-final class TransitionJiraIssueToInProgressCommand implements SynchronizationCommandInterface
+final readonly class TransitionJiraIssueToInProgressCommand implements SynchronizationCommandInterface
 {
-    /** @var JiraIssueRepository */
-    private $jiraIssueRepository;
-
-    /** @var array */
-    private $inProgressLabels;
-
-    /** @var int */
-    private $globalTransitionId;
-
-    /** @var array */
-    private $subTaskTransitions;
-
-    /** @var int */
-    private $subTaskTypeId;
-
-    /** @var int */
-    private $statusId;
-
-    /** @var LoggerInterface */
-    private $logger;
-
     public function __construct(
-        JiraIssueRepository $jiraIssueRepository,
-        array $inProgressLabels,
-        int $globalTransitionId,
-        array $subTaskTransitions,
-        int $subTaskTypeId,
-        int $statusId,
-        LoggerInterface $logger
+        private JiraIssueRepository $jiraIssueRepository,
+        private array $inProgressLabels,
+        private int $globalTransitionId,
+        private array $subTaskTransitions,
+        private int $subTaskTypeId,
+        private int $statusId,
+        private LoggerInterface $logger
     ) {
-        $this->jiraIssueRepository = $jiraIssueRepository;
-        $this->inProgressLabels    = $inProgressLabels;
-        $this->globalTransitionId  = $globalTransitionId;
-        $this->subTaskTransitions  = $subTaskTransitions;
-        $this->subTaskTypeId       = $subTaskTypeId;
-        $this->statusId            = $statusId;
-        $this->logger              = $logger;
     }
 
     /**

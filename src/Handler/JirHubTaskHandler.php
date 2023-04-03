@@ -13,18 +13,13 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-class JirHubTaskHandler
+readonly class JirHubTaskHandler
 {
-    /** @var GitHubHandler */
-    private $githubHandler;
-
-    /** @var JiraIssueRepository */
-    private $jiraIssueRepository;
-
-    public function __construct(GitHubHandler $githubHandler, JiraIssueRepository $jiraIssueRepository)
-    {
-        $this->githubHandler       = $githubHandler;
-        $this->jiraIssueRepository = $jiraIssueRepository;
+    public function __construct(
+        private GitHubHandler $githubHandler,
+        private JiraIssueRepository $jiraIssueRepository,
+        private JiraHelper $jiraHelper
+    ) {
     }
 
     /**
@@ -38,10 +33,10 @@ class JirHubTaskHandler
      */
     public function getJirHubTaskFromGithubWebhookData(array $webhookData): JirHubTask
     {
-        $jiraIssue   = null;
+        $jiraIssue = null;
         $pullRequest = $this->githubHandler->getPullRequestFromWebhookData($webhookData);
-        $issueKey    = JiraHelper::extractIssueKeyFromString($pullRequest->getHeadRef())
-            ?? JiraHelper::extractIssueKeyFromString($pullRequest->getTitle());
+        $issueKey = $this->jiraHelper->extractIssueKeyFromString($pullRequest->getHeadRef())
+            ?? $this->jiraHelper->extractIssueKeyFromString($pullRequest->getTitle());
 
         if (null !== $issueKey) {
             $jiraIssue = $this->jiraIssueRepository->getIssue($issueKey);

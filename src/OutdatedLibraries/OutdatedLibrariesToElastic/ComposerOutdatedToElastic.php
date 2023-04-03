@@ -3,26 +3,21 @@
 namespace App\OutdatedLibraries\OutdatedLibrariesToElastic;
 
 use App\OutdatedLibraries\OutdatedLibrariesToElastic\ElasticInput\ComposerOutdated;
-use Elasticsearch\Client;
+use Elastic\Elasticsearch\Client;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'composer:outdated-libraries')]
 class ComposerOutdatedToElastic extends Command
 {
-    /** @var string */
-    protected static $defaultName = 'composer:outdated-libraries';
-
-    private Client $elasticsearchClient;
-    private ComposerOutdated $ComposerOutdated;
-
-    public function __construct(ComposerOutdated $ComposerOutdated, Client $elasticsearchClient)
-    {
+    public function __construct(
+        private readonly ComposerOutdated $ComposerOutdated,
+        private readonly Client $elasticsearchClient
+    ) {
         parent::__construct();
-
-        $this->ComposerOutdated    = $ComposerOutdated;
-        $this->elasticsearchClient = $elasticsearchClient;
     }
 
     protected function configure()
@@ -37,7 +32,7 @@ class ComposerOutdatedToElastic extends Command
         $name = $input->getArgument('name');
 
         if ($this->verifyNameChronos($name)) {
-            $json   = $this->ComposerOutdated->getComposerJson($input->getArgument('path'), $name);
+            $json = $this->ComposerOutdated->getComposerJson($input->getArgument('path'), $name);
             $params = ['index' => 'tiime-chronos-outdated-libraries', 'body' => $json];
             $this->elasticsearchClient->index($params);
 

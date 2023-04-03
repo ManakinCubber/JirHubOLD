@@ -10,36 +10,17 @@ use Psr\Cache\InvalidArgumentException;
 
 class DashboardHandler
 {
-    const REVIEW_ENVIRONMENTS = 'review_environments';
-
-    const PULL_REQUEST_TO_DEPLOY = 'pull_requests_to_deploy';
-
-    const PULL_REQUEST_TO_MERGE_ON_DEV = 'pull_requests_to_merge_on_dev';
-
-    const CACHE_KEY = 'dashboard_data';
-
-    /** @var ReviewEnvironments */
-    protected $reviewEnvironments;
-
-    /** @var PullRequestsToDeploy */
-    protected $pullRequestsToDeploy;
-
-    /** @var PullRequestsToMergeOnDev */
-    protected $pullRequestsToMergeOnDev;
-
-    /** @var CacheItemPoolInterface */
-    protected $cache;
+    public const REVIEW_ENVIRONMENTS = 'review_environments';
+    public const PULL_REQUEST_TO_DEPLOY = 'pull_requests_to_deploy';
+    public const PULL_REQUEST_TO_MERGE_ON_DEV = 'pull_requests_to_merge_on_dev';
+    public const CACHE_KEY = 'dashboard_data';
 
     public function __construct(
-        ReviewEnvironments $reviewEnvironments,
-        PullRequestsToDeploy $pullRequestsToDeploy,
-        PullRequestsToMergeOnDev $pullRequestsToMergeOnDev,
-        CacheItemPoolInterface $cache
+        private readonly ReviewEnvironments $reviewEnvironments,
+        private readonly PullRequestsToDeploy $pullRequestsToDeploy,
+        private readonly PullRequestsToMergeOnDev $pullRequestsToMergeOnDev,
+        private readonly CacheItemPoolInterface $cache
     ) {
-        $this->reviewEnvironments       = $reviewEnvironments;
-        $this->pullRequestsToDeploy     = $pullRequestsToDeploy;
-        $this->pullRequestsToMergeOnDev = $pullRequestsToMergeOnDev;
-        $this->cache                    = $cache;
     }
 
     /**
@@ -52,8 +33,8 @@ class DashboardHandler
         if (!$cacheItem->isHit()) {
             $cacheItem->set(
                 [
-                    self::REVIEW_ENVIRONMENTS          => $this->reviewEnvironments->fetch(),
-                    self::PULL_REQUEST_TO_DEPLOY       => $this->pullRequestsToDeploy->fetch(),
+                    self::REVIEW_ENVIRONMENTS => $this->reviewEnvironments->fetch(),
+                    self::PULL_REQUEST_TO_DEPLOY => $this->pullRequestsToDeploy->fetch(),
                     self::PULL_REQUEST_TO_MERGE_ON_DEV => $this->pullRequestsToMergeOnDev->fetch(),
                 ]
             );

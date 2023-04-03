@@ -2,35 +2,15 @@
 
 namespace App\Model\Github;
 
-class PullRequestReview
+readonly class PullRequestReview
 {
-    /** @var int */
-    private $id;
-
-    /** @var GithubUser */
-    private $user;
-
-    /** @var string */
-    private $body;
-
-    /** @var string */
-    private $state;
-
-    /** @var string */
-    private $url;
-
     public function __construct(
-        int $id,
-        GithubUser $user,
-        string $body,
-        string $state,
-        string $url
+        private int $id,
+        private GithubUser $user,
+        private string $body,
+        private string $state,
+        private string $url
     ) {
-        $this->id    = $id;
-        $this->user  = $user;
-        $this->body  = $body;
-        $this->state = $state;
-        $this->url   = $url;
     }
 
     public function getId(): int

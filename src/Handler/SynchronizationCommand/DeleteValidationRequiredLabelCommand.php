@@ -7,30 +7,14 @@ use App\Model\JirHubTask;
 use App\Repository\GitHub\PullRequestLabelRepository;
 use Psr\Log\LoggerInterface;
 
-final class DeleteValidationRequiredLabelCommand implements SynchronizationCommandInterface
+final readonly class DeleteValidationRequiredLabelCommand implements SynchronizationCommandInterface
 {
-    /** @var GitHubHandler */
-    private $githubHandler;
-
-    /** @var string */
-    private $label;
-
-    /** @var PullRequestLabelRepository */
-    private $pullRequestLabelRepository;
-
-    /** @var LoggerInterface */
-    private $logger;
-
     public function __construct(
-        GitHubHandler $githubHandler,
-        string $label,
-        PullRequestLabelRepository $pullRequestLabelRepository,
-        LoggerInterface $logger
+        private GitHubHandler $githubHandler,
+        private string $label,
+        private PullRequestLabelRepository $pullRequestLabelRepository,
+        private LoggerInterface $logger
     ) {
-        $this->githubHandler              = $githubHandler;
-        $this->label                      = $label;
-        $this->pullRequestLabelRepository = $pullRequestLabelRepository;
-        $this->logger                     = $logger;
     }
 
     public function execute(JirHubTask $jirHubTask): void

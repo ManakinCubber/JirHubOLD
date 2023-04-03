@@ -12,22 +12,14 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-class JiraIssueRepository
+readonly class JiraIssueRepository
 {
-    private const ROUTE_GET_ISSUE       = '/issue/%s';
+    private const ROUTE_GET_ISSUE = '/issue/%s';
     private const ROUTE_POST_TRANSITION = '/issue/%s/transitions';
-    private const ROUTE_SEARCH          = '/search';
+    private const ROUTE_SEARCH = '/search';
 
-    /** @var JiraClient */
-    private $jiraClient;
-
-    /** @var JiraIssueFactory */
-    private $jiraIssueFactory;
-
-    public function __construct(JiraClient $jiraClient, JiraIssueFactory $jiraIssueFactory)
+    public function __construct(private JiraClient $jiraClient, private JiraIssueFactory $jiraIssueFactory)
     {
-        $this->jiraClient       = $jiraClient;
-        $this->jiraIssueFactory = $jiraIssueFactory;
     }
 
     /**
@@ -65,7 +57,7 @@ class JiraIssueRepository
 
     public function search(string $jql): array
     {
-        $issues     = [];
+        $issues = [];
         $issuesData = $this->jiraClient->get(
             self::ROUTE_SEARCH,
             ['jql' => $jql]

@@ -5,28 +5,20 @@ namespace App\Command;
 use App\Handler\HerokuHandler;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'heroku:manage:dynos')]
 class HerokuManageCommand extends Command
 {
-    /** @var LoggerInterface */
-    protected $logger;
-
-    /** @var HerokuHandler */
-    private $herokuHandler;
-
-    /** @var string */
-    protected static $defaultName = 'heroku:manage:dynos';
-
-    public function __construct(LoggerInterface $logger, HerokuHandler $herokuHandler)
-    {
+    public function __construct(
+        private readonly LoggerInterface $logger,
+        private readonly HerokuHandler $herokuHandler
+    ) {
         parent::__construct();
-
-        $this->logger        = $logger;
-        $this->herokuHandler = $herokuHandler;
     }
 
     protected function configure()
@@ -61,8 +53,8 @@ class HerokuManageCommand extends Command
     {
         $this->logger->info(sprintf('%s : exécution de la commande', self::$defaultName));
 
-        $action    = $input->getOption('action');
-        $appNames  = explode(',', $input->getOption('apps'));
+        $action = $input->getOption('action');
+        $appNames = explode(',', $input->getOption('apps'));
         $dynoTypes = explode(',', $input->getOption('types'));
 
         switch ($action) {

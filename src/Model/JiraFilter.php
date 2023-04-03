@@ -2,22 +2,13 @@
 
 namespace App\Model;
 
-class JiraFilter
+readonly class JiraFilter
 {
-    /** @var int */
-    private $id;
-
-    /** @var string */
-    private $name;
-
-    /** @var JiraIssue[] */
-    private $issues;
-
-    public function __construct(int $id, string $name, array $issues)
-    {
-        $this->id     = $id;
-        $this->name   = $name;
-        $this->issues = $issues;
+    public function __construct(
+        private int $id,
+        private string $name,
+        private array $issues
+    ) {
     }
 
     public function getId(): int

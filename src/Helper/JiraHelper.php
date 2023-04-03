@@ -2,12 +2,18 @@
 
 namespace App\Helper;
 
-class JiraHelper
+readonly class JiraHelper
 {
-    public static function extractIssueKeyFromString(string $str): ?string
+    public function __construct(
+        private string $jiraIssueRegexPattern,
+        private string $jiraHost
+    ) {
+    }
+
+    public function extractIssueKeyFromString(string $str): ?string
     {
         $matches = [];
-        preg_match(getenv('JIRA_ISSUE_REGEX_PATTERN'), $str, $matches);
+        preg_match($this->jiraIssueRegexPattern, $str, $matches);
 
         if (1 === \count($matches)) {
             return $matches[0];
@@ -16,8 +22,8 @@ class JiraHelper
         return null;
     }
 
-    public static function buildIssueUrlFromIssueName(string $issueName): string
+    public function buildIssueUrlFromIssueName(string $issueName): string
     {
-        return getenv('JIRA_HOST') . '/browse/' . $issueName;
+        return $this->jiraHost.'/browse/'.$issueName;
     }
 }

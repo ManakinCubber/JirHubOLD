@@ -7,11 +7,9 @@ use App\OutdatedLibraries\OutdatedFileToTable\OutdatedFileToTable;
 class AndroidOutdated
 {
     use PatternTrait;
-    private OutdatedFileToTable $OutdatedFileToTable;
 
-    public function __construct(OutdatedFileToTable $OutdatedFileToTable)
+    public function __construct(private readonly OutdatedFileToTable $OutdatedFileToTable)
     {
-        $this->OutdatedFileToTable = $OutdatedFileToTable;
     }
 
     public function getAndroidJson(string $path, string $name): string
@@ -21,7 +19,7 @@ class AndroidOutdated
         foreach ($tab as $key => $value) {
             $tab[$key] = $this->patternArray($name, $value);
         }
-        $now   = (new \DateTimeImmutable())->format(\DateTimeInterface::RFC3339);
+        $now = (new \DateTimeImmutable())->format(\DateTimeInterface::RFC3339);
         $tab[] = ['@timestamp' => $now];
 
         return json_encode(array_values($tab));

@@ -3,26 +3,21 @@
 namespace App\OutdatedLibraries\OutdatedLibrariesToElastic;
 
 use App\OutdatedLibraries\OutdatedLibrariesToElastic\ElasticInput\CocoaPodsOutdated;
-use Elasticsearch\Client;
+use Elastic\Elasticsearch\Client;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'CocoaPods:outdated-libraries')]
 class CocoaPodsOutdatedToElastic extends Command
 {
-    /** @var string */
-    protected static $defaultName = 'CocoaPods:outdated-libraries';
-
-    private Client $elasticsearchClient;
-    private CocoaPodsOutdated $CocoaPodsOutdated;
-
-    public function __construct(CocoaPodsOutdated $CocoaPodsOutdated, Client $elasticsearchClient)
-    {
+    public function __construct(
+        private readonly CocoaPodsOutdated $CocoaPodsOutdated,
+        private readonly Client $elasticsearchClient
+    ) {
         parent::__construct();
-
-        $this->CocoaPodsOutdated   = $CocoaPodsOutdated;
-        $this->elasticsearchClient = $elasticsearchClient;
     }
 
     protected function configure()
@@ -37,7 +32,7 @@ class CocoaPodsOutdatedToElastic extends Command
         $name = $input->getArgument('name');
 
         if ($this->verifyNameCocoaPods($name)) {
-            $json   = $this->CocoaPodsOutdated->getCocoaPodsJson($input->getArgument('path'), $name);
+            $json = $this->CocoaPodsOutdated->getCocoaPodsJson($input->getArgument('path'), $name);
             $params = ['index' => 'tiime-chronos-outdated-libraries', 'body' => $json];
 
             $this->elasticsearchClient->index($params);

@@ -8,25 +8,13 @@ use App\Repository\GitHub\PullRequestLabelRepository;
 use App\Repository\GitHub\PullRequestRepository;
 use Psr\Log\LoggerInterface;
 
-final class UpdatePullRequestTitleCommand implements SynchronizationCommandInterface
+final readonly class UpdatePullRequestTitleCommand implements SynchronizationCommandInterface
 {
-    /** @var PullRequestRepository */
-    private $pullRequestRepository;
-
-    /** @var PullRequestLabelRepository */
-    private $pullRequestLabelRepository;
-
-    /** @var LoggerInterface */
-    private $logger;
-
     public function __construct(
-        PullRequestRepository $pullRequestRepository,
-        PullRequestLabelRepository $pullRequestLabelRepository,
-        LoggerInterface $logger
+        private PullRequestRepository $pullRequestRepository,
+        private PullRequestLabelRepository $pullRequestLabelRepository,
+        private LoggerInterface $logger
     ) {
-        $this->pullRequestRepository      = $pullRequestRepository;
-        $this->pullRequestLabelRepository = $pullRequestLabelRepository;
-        $this->logger                     = $logger;
     }
 
     public function execute(JirHubTask $jirHubTask): void
@@ -36,9 +24,9 @@ final class UpdatePullRequestTitleCommand implements SynchronizationCommandInter
         }
 
         $pullRequest = $jirHubTask->getGithubPullRequest();
-        $title       = $pullRequest->getTitle();
+        $title = $pullRequest->getTitle();
 
-        $regexPattern  = '/^\[(?<prefix>.*)\]/i';
+        $regexPattern = '/^\[(?<prefix>.*)\]/i';
         $betterPrTitle = null;
 
         $matches = [];
@@ -46,7 +34,7 @@ final class UpdatePullRequestTitleCommand implements SynchronizationCommandInter
 
         $labels = [
             'Tech' => 'Tech',
-            'bug'  => 'Fix',
+            'bug' => 'Fix',
         ];
 
         foreach ($labels as $label => $prefix) {

@@ -1,30 +1,30 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-	<section class="section">
+    <section>
 
-		<section>
+        <section>
 
-			<ul>
-				{% for i in 0..(num-1) %}
+            <ul>
+                {% for i in 0..(num-1) %}
 
-					{% if type[i]=='string' %}
-						<p>{{messageLinks[i]}}</p>
-					{% endif %}
-					{% if type[i]=='array'  %}
-						<li class="pull_requests">
-							<span class="ta-title">{{messageLinks[i]['message']}}</span>
+                    {% if type[i]=='string' %}
+                        <p>{{ messageLinks[i] }}</p>
+                    {% endif %}
+                    {% if type[i]=='array' %}
+                        <li>
+                            <span>{{ messageLinks[i]['message'] }}</span>
 
-							<span class="github">
+                            <span>
 								<a target="_blank" href="{{ messageLinks[i]['html_url'] }}">
-									<i class="fab fa-github"></i>
+									<i></i>
 								</a>
 							</span>
-						</li>
-					{% endif %}
-				{% endfor %}
-			</ul>
-		</section>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </section>
 
-	</section>
+    </section>
 
 {% endblock %}

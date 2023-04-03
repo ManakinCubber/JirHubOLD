@@ -7,20 +7,11 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class LabelsAppliedEvent extends Event
 {
-    /** @var PullRequest */
-    protected $pullRequest;
-
-    /** @var string */
-    protected $reviewEnvironment;
-
-    /** @var string|null */
-    protected $jiraIssueKey;
-
-    public function __construct(PullRequest $pullRequest, string $reviewEnvironment, ?string $jiraIssueKey)
-    {
-        $this->pullRequest       = $pullRequest;
-        $this->reviewEnvironment = $reviewEnvironment;
-        $this->jiraIssueKey      = $jiraIssueKey;
+    public function __construct(
+        protected readonly PullRequest $pullRequest,
+        protected readonly string $reviewEnvironment,
+        protected readonly ?string $jiraIssueKey
+    ) {
     }
 
     public function getPullRequest(): PullRequest

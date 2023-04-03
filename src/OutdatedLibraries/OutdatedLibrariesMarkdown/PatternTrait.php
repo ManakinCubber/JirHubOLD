@@ -13,10 +13,10 @@ trait PatternTrait
 
     private function patternLigne(Library $value): string
     {
-        $name             = $value->getName();
+        $name = $value->getName();
         $installedVersion = $value->getInstalledVersion();
-        $latestVersion    = $value->getLatestVersion();
+        $latestVersion = $value->getLatestVersion();
 
-        return '| ⚠️' . ' ' . " $name  | $installedVersion | $latestVersion |";
+        return '| ⚠️ '." $name  | $installedVersion | $latestVersion |";
     }
 }

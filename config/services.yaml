@@ -1,12 +1,178 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    github.repository_owner: '%env(GITHUB_REPOSITORY_OWNER)%'
+    github.repository_name: '%env(GITHUB_REPOSITORY_NAME)%'
+    github.app_id: '%env(GITHUB_APP_ID)%'
+    github.app_installation_id: '%env(GITHUB_APP_INSTALLATION_ID)%'
+    github.rsa_key: '%env(GITHUB_PRIVATE_RSA_KEY)%'
+    github.labels.validation_required: '~validation-required'
+    github.labels.in_progress: [ 'WIP', 'WAIT', 'Standby' ]
+    github.labels:
+        in_progress: '%github.labels.in_progress%'
+        validated: '~validated'
+        validation_environments: [ '~validation-blue', '~validation-red', '~validation-green', '~validation-yellow', '~validation-pink', '~validation-orange', '~validation-purple', '~validation-grey', '~validation-black', '~validation-white', '~validation-teal', '~validation-brown' ]
+        validation_prefix: '~validation-'
+        validation_required: '%github.labels.validation_required%'
+    github.approve_count: 1
+    github.default_base_branch: 'dev'
+    jira.host: '%env(JIRA_HOST)%'
+    jira.user: '%env(JIRA_USER)%'
+    jira.pass: '%env(JIRA_PASS)%'
+    jira.issue_regex_pattern: '%env(JIRA_ISSUE_REGEX_PATTERN)%'
+    env(TMA_FILTER_ID): 1
+    env(ELASTICSEARCH_URI): 'http://localhost:9200'
+    env(ELASTICSEARCH_INDEX_TMA_ISSUES): ''
+    tma_filter_id: '%env(int:TMA_FILTER_ID)%'
+    elasticsearch.uri: '%env(ELASTICSEARCH_URI)%'
+    elasticsearch.index.tma_issues: '%env(ELASTICSEARCH_INDEX_TMA_ISSUES)%'
+    heroku.domain: '%env(HEROKU_DOMAIN)%'
+    heroku.api_key: '%env(HEROKU_API_KEY)%'
 
 services:
-  _defaults:
-    autowire: true
-    autoconfigure: true
-    public: false
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-imports:
-  - { resource: services/app.yaml }
-  - { resource: services/tma.yaml }
-  - { resource: services/amqp.yaml }
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+    App\Controller\HerokuController:
+        arguments:
+            $deployHookToken: '%env(HEROKU_DEPLOY_HOOK_TOKEN)%'
+            $repositoryOwner: '%env(GITHUB_REPOSITORY_OWNER)%'
+            $repositoryName: '%env(GITHUB_REPOSITORY_NAME)%'
+            $slackChangelogChannel: '%env(SLACK_CHANGELOG_CHANNEL)%'
+
+    App\Client\GitHubClient:
+        arguments:
+            $gitHubAppId: '%github.app_id%'
+            $gitHubPrivateRsaKey: '%github.rsa_key%'
+            $gitHubAppInstallationId: '%github.app_installation_id%'
+
+    App\Helper\JiraHelper:
+        arguments:
+            $jiraIssueRegexPattern: '%jira.issue_regex_pattern%'
+            $jiraHost: '%jira.host%'
+
+    App\Client\JiraClient:
+        arguments:
+            $host: '%jira.host%'
+            $username: '%jira.user%'
+            $pass: '%jira.pass%'
+
+    App\Factory\JiraIssueFactory:
+        arguments:
+            $host: '%jira.host%'
+
+    App\Handler\GitHubHandler:
+        arguments:
+            $labels: '%github.labels%'
+            $approveCount: '%github.approve_count%'
+            $defaultBaseBranch: '%github.default_base_branch%'
+
+    App\Handler\SynchronizationCommand\DeleteValidationRequiredLabelCommand:
+        arguments:
+            $label: '%github.labels.validation_required%'
+
+    App\Handler\SynchronizationCommand\AddValidationRequiredLabelCommand:
+        arguments:
+            $label: '%github.labels.validation_required%'
+
+    App\Handler\SynchronizationCommand\TransitionJiraIssueToToValidateCommand:
+        arguments:
+            $label: '%github.labels.validation_required%'
+            $transitionId: 71
+            $statusId: 10926
+
+    App\Handler\SynchronizationCommand\TransitionJiraIssueToInReviewCommand:
+        arguments:
+            $label: '%github.labels.validation_required%'
+            $transitionId: 61
+            $statusId: 10700
+
+    App\Handler\SynchronizationCommand\TransitionJiraIssueToInProgressCommand:
+        arguments:
+            $inProgressLabels: '%github.labels.in_progress%'
+            $globalTransitionId: 61
+            $subTaskTransitions:
+                - [ statusId: 11021, transitionId: 41 ]
+                - [ statusId: 10700, transitionId: 171 ]
+            $subTaskTypeId: 10102
+            $statusId: 3
+
+    App\Repository\GitHub\PullRequestRepository:
+        arguments:
+            $repositoryOwner: '%github.repository_owner%'
+            $repositoryName: '%github.repository_name%'
+
+    App\Repository\GitHub\PullRequestReviewRepository:
+        arguments:
+            $repositoryOwner: '%github.repository_owner%'
+            $repositoryName: '%github.repository_name%'
+
+    App\Repository\GitHub\PullRequestLabelRepository:
+        arguments:
+            $repositoryOwner: '%github.repository_owner%'
+            $repositoryName: '%github.repository_name%'
+
+    App\Repository\GitHub\CommitRepository:
+        arguments:
+            $repositoryOwner: '%github.repository_owner%'
+            $repositoryName: '%github.repository_name%'
+
+    public.logger:
+        alias: 'logger'
+        public: true
+
+    Github\HttpClient\Builder:
+    Lcobucci\JWT\Builder:
+
+    JoliCode\Slack\Api\Client:
+        factory: [ 'JoliCode\Slack\ClientFactory', create ]
+        arguments: [ '%env(SLACK_TOKEN)%' ]
+
+    App\Handler\SlackHandler:
+        arguments:
+            $token: '%env(SLACK_TOKEN)%'
+
+    App\Dashboard\Query\ReviewEnvironments: '@App\Dashboard\Query\Adapter\FromRepositoryReviewEnvironments'
+    App\Dashboard\Query\PullRequestsToDeploy: '@App\Dashboard\Query\Adapter\FromRepositoryPullRequestsToDeploy'
+    App\Dashboard\Query\PullRequestsToMergeOnDev: '@App\Dashboard\Query\Adapter\FromRepositoryPullRequestsToMergeOnDev'
+
+    App\AMQP\RecordAMQPMetricsCommand:
+        arguments:
+            $index: '%env(AMQP_ELASTICSEARCH_INDEX)%'
+
+    App\AMQP\Repository\AMQPQueueMetricsRepository:
+        arguments:
+            $vhost: '%env(AMQP_MONITORING_VHOST)%'
+
+    Elastic\Elasticsearch\ClientBuilder:
+        factory: [ 'Elastic\Elasticsearch\ClientBuilder', 'create' ]
+        calls:
+            - setHosts: [ [ '%elasticsearch.uri%' ] ]
+            - setLogger: [ '@logger' ]
+
+    Elastic\Elasticsearch\Client:
+        factory: [ '@Elastic\Elasticsearch\ClientBuilder', 'build' ]
+
+    App\TMA\Repository\TMAIssueRepository:
+        arguments:
+            $index: '%elasticsearch.index.tma_issues%'
+
+    App\TMA\RecordTMAMetricsCommand:
+        arguments:
+            $tmaFilterId: '%tma_filter_id%'

@@ -11,29 +11,16 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class JiraClient
 {
-    /** @var HttpClientInterface */
-    private $httpClient;
-
-    /** @var string */
-    private $username;
-
-    /** @var string */
-    private $pass;
-
-    /** @var string */
-    private $baseUrl;
+    private string $baseUrl;
 
     public function __construct(
-        HttpClientInterface $httpClient,
+        private readonly HttpClientInterface $httpClient,
+        private readonly string $username,
+        private readonly string $pass,
         string $host,
-        string $username,
-        string $pass,
         string $version = '3'
     ) {
-        $this->httpClient = $httpClient;
-        $this->baseUrl    = $host . '/rest/api/' . $version;
-        $this->username   = $username;
-        $this->pass       = $pass;
+        $this->baseUrl = $host.'/rest/api/'.$version;
     }
 
     /**
@@ -51,11 +38,11 @@ class JiraClient
     ): ?array {
         $response = $this->httpClient->request(
             $method,
-            $this->baseUrl . $route,
+            $this->baseUrl.$route,
             [
                 'auth_basic' => [$this->username, $this->pass],
-                'query'      => $queryParameters,
-                'json'       => $requestContent,
+                'query' => $queryParameters,
+                'json' => $requestContent,
             ]
         );
 

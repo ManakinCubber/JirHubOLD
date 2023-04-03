@@ -4,33 +4,20 @@ namespace App\TMA;
 
 use App\Repository\Jira\JiraFilterRepository;
 use App\TMA\Repository\TMAIssueRepository;
-use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'record:tma-metrics')]
 class RecordTMAMetricsCommand extends Command
 {
-    /** @var string */
-    protected static $defaultName = 'record:tma-metrics';
-
-    private JiraFilterRepository $jiraFilterRepository;
-    private TMAIssueRepository $tmaIssueRepository;
-    private LoggerInterface $logger;
-    private int $tmaFilterId;
-
     public function __construct(
-        JiraFilterRepository $jiraFilterRepository,
-        TMAIssueRepository $tmaIssueRepository,
-        LoggerInterface $logger,
-        int $tmaFilterId
+        private readonly JiraFilterRepository $jiraFilterRepository,
+        private readonly TMAIssueRepository $tmaIssueRepository,
+        private readonly int $tmaFilterId
     ) {
         parent::__construct();
-
-        $this->logger               = $logger;
-        $this->jiraFilterRepository = $jiraFilterRepository;
-        $this->tmaIssueRepository   = $tmaIssueRepository;
-        $this->tmaFilterId          = $tmaFilterId;
     }
 
     protected function configure()
@@ -41,7 +28,7 @@ class RecordTMAMetricsCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $jiraFilter = $this->jiraFilterRepository->find($this->tmaFilterId);
-        $dateTime   = new \DateTimeImmutable();
+        $dateTime = new \DateTimeImmutable();
 
         foreach ($jiraFilter->getIssues() as $issue) {
             $this->tmaIssueRepository->save($issue, $dateTime);

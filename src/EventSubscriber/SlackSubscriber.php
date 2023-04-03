@@ -9,20 +9,16 @@ use App\Model\Slack\ValidationRequired;
 use JoliCode\Slack\Api\Client;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class SlackSubscriber implements EventSubscriberInterface
+readonly class SlackSubscriber implements EventSubscriberInterface
 {
-    /** @var Client */
-    protected $client;
-
-    public function __construct(Client $client)
+    public function __construct(protected Client $client)
     {
-        $this->client = $client;
     }
 
     public static function getSubscribedEvents()
     {
         return [
-            LabelsAppliedEvent::class           => 'onLabelsApplied',
+            LabelsAppliedEvent::class => 'onLabelsApplied',
             PullRequestMergeFailureEvent::class => 'onPrFail',
         ];
     }
@@ -63,7 +59,7 @@ class SlackSubscriber implements EventSubscriberInterface
         $message = array_merge(
             [
                 'username' => 'JirHub',
-                'channel'  => $channel,
+                'channel' => $channel,
             ],
             $message->normalize()
         );
@@ -79,10 +75,10 @@ class SlackSubscriber implements EventSubscriberInterface
             $channel = getenv('SLACK_DEV_CHANNEL');
         }
         $this->client->chatPostMessage([
-            'username'   => 'JirHub',
-            'text'       => $message,
+            'username' => 'JirHub',
+            'text' => $message,
             'icon_emoji' => ':eyes:',
-            'channel'    => $channel,
+            'channel' => $channel,
         ]);
     }
 }

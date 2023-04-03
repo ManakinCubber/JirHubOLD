@@ -10,18 +10,10 @@ use App\Repository\JirHubTaskRepository;
 
 class FromRepositoryReviewEnvironments implements ReviewEnvironments
 {
-    /** @var PullRequestRepository */
-    private $pullRequestRepository;
-
-    /** @var JirHubTaskRepository */
-    private $jirHubTaskRepository;
-
     public function __construct(
-        PullRequestRepository $pullRequestRepository,
-        JirHubTaskRepository $jirHubTaskRepository
+        private readonly PullRequestRepository $pullRequestRepository,
+        private readonly JirHubTaskRepository $jirHubTaskRepository
     ) {
-        $this->pullRequestRepository = $pullRequestRepository;
-        $this->jirHubTaskRepository  = $jirHubTaskRepository;
     }
 
     public function fetch(): array
@@ -41,10 +33,9 @@ class FromRepositoryReviewEnvironments implements ReviewEnvironments
             new ReviewEnvironment('orange', 'Transverse'),
         ];
 
-        /** @var ReviewEnvironment $environment */
         foreach ($environments as $environment) {
             $pullRequestsOnEnvironment = $this->pullRequestRepository->search(
-                [PullRequestSearchFilters::LABELS => ['~validation-' . $environment->getName()]]
+                [PullRequestSearchFilters::LABELS => ['~validation-'.$environment->getName()]]
             );
 
             if (!empty($pullRequestsOnEnvironment)) {

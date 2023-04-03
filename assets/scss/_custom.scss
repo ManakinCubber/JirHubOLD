@@ -1,0 +1,68 @@
+// scss-docs-start import-stack
+// Configuration
+@import "~bootstrap/scss/functions";
+
+// scss-docs-start colors-map
+$reviewEnvironments: (
+        "blue": #0074D9,
+        "red": #FF4136,
+        "green": #2ECC40,
+        "yellow": #FFDC00,
+        "pink": #FF80CC,
+        "orange": #FF851B,
+        "purple": #B10DC9,
+        "grey": #AAAAAA,
+        "black": #111111,
+        "white": #FFFFFF,
+        "teal": #39CCCC,
+        "brown": #A0522D
+) !default;
+
+.environment {
+  @each $name, $color in $reviewEnvironments {
+    &.environment-#{$name} {
+      .card {
+        background-color: $color;
+        color: color-contrast($color);
+
+        a {
+          text-decoration: none;
+        }
+
+        svg {
+          fill: color-contrast($color);
+        }
+
+        button.btn-link {
+          svg {
+            stroke: color-contrast($color);
+          }
+        }
+
+        .card-body {
+          min-height: 150px;
+        }
+      }
+
+      &.free {
+        .card {
+          background-color: transparent;
+          border: 3px solid $color;
+          color: white;
+
+          .card-header {
+            background-color: $color;
+            color: color-contrast($color);
+          }
+        }
+      }
+    }
+  }
+}
+
+.pr-links {
+  a:not(:hover) {
+    color: $body-color-dark;
+    text-decoration: none;
+  }
+}

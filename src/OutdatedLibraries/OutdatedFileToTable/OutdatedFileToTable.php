@@ -11,11 +11,11 @@ class OutdatedFileToTable
         $tab[] = '';
 
         foreach ($content['installed'] as $value) {
-            $name          = $value['name'];
-            $version       = $this->filterVersion($value['version']);
+            $name = $value['name'];
+            $version = $this->filterVersion($value['version']);
             $latestVersion = $this->filterVersion($value['latest']);
-            $latestStatus  = $value['latest-status'];
-            $isAbandoned   = $value['abandoned'];
+            $latestStatus = $value['latest-status'];
+            $isAbandoned = $value['abandoned'];
 
             if ($isAbandoned || \is_string($isAbandoned)) {
                 $tab[] = new Library($name, $version, 'abandonné');
@@ -44,7 +44,7 @@ class OutdatedFileToTable
     {
         $array = explode("\n", file_get_contents($path));
         $array = array_filter($array);
-        $num   = \count($array);
+        $num = \count($array);
 
         for ($i = 1; $i < $num; ++$i) {
             $tab[] = $this->patternLigneNpm(explode(' ', $array[$i]));
@@ -55,8 +55,8 @@ class OutdatedFileToTable
 
     private function patternLigneNpm(array $ligne): ?Library
     {
-        $ligne         = array_values(array_filter($ligne));
-        $version       = $ligne[1];
+        $ligne = array_values(array_filter($ligne));
+        $version = $ligne[1];
         $latestVersion = $ligne[3];
 
         if (!$this->isMajor($version, $latestVersion)) {
@@ -70,7 +70,7 @@ class OutdatedFileToTable
     {
         $array = explode("\n", file_get_contents($path));
         $array = array_filter($array);
-        $num   = \count($array);
+        $num = \count($array);
 
         for ($i = 3; $i < $num; ++$i) {
             $tab[] = $this->patternLigneCocoaPods(explode(' ', $array[$i]));
@@ -81,8 +81,8 @@ class OutdatedFileToTable
 
     private function patternLigneCocoaPods(array $ligne): ?Library
     {
-        $ligne         = array_values(array_filter($ligne));
-        $version       = $ligne[2];
+        $ligne = array_values(array_filter($ligne));
+        $version = $ligne[2];
         $latestVersion = $ligne[4];
 
         if ('(unused)' === $ligne[4]) {
@@ -100,8 +100,8 @@ class OutdatedFileToTable
     {
         $array = explode("\n", file_get_contents($path));
         $array = array_filter($array);
-        $num   = \count($array);
-        $k     = 0;
+        $num = \count($array);
+        $k = 0;
 
         for ($i = 0; $i < $num; ++$i) {
             if ('Gradle release-candidate updates:' === $array[$i]) {
@@ -127,7 +127,7 @@ class OutdatedFileToTable
         if ('-' !== $tab[1]) {
             return null;
         }
-        $version       = explode('[', $tab[3])[1];
+        $version = explode('[', $tab[3])[1];
         $latestVersion = explode(']', explode('-', $tab[5])[0])[0];
 
         if (!$this->isMajor($version, $latestVersion)) {

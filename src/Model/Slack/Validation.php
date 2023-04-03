@@ -7,20 +7,12 @@ use App\Model\Github\PullRequest;
 
 abstract class Validation implements SlackMessage
 {
-    /** @var PullRequest */
-    protected $pullRequest;
-
-    /** @var string */
-    protected $reviewEnvironment;
-
-    /** @var string|null */
-    protected $jiraIssueKey;
-
-    public function __construct(PullRequest $pullRequest, string $reviewEnvironment, ?string $jiraIssueKey)
-    {
-        $this->pullRequest       = $pullRequest;
-        $this->reviewEnvironment = $reviewEnvironment;
-        $this->jiraIssueKey      = $jiraIssueKey;
+    public function __construct(
+        protected PullRequest $pullRequest,
+        protected JiraHelper $jiraHelper,
+        protected string $reviewEnvironment,
+        protected ?string $jiraIssueKey
+    ) {
     }
 
     public function normalize(): array
@@ -28,14 +20,14 @@ abstract class Validation implements SlackMessage
         $subject = $this->reviewEnvironment;
 
         if (null !== $this->jiraIssueKey) {
-            $subject = JiraHelper::buildIssueUrlFromIssueName($this->jiraIssueKey);
+            $subject = $this->jiraHelper->buildIssueUrlFromIssueName($this->jiraIssueKey);
         }
 
         return [
             'blocks' => json_encode(array_merge(
                 [
                     [
-                        'type'   => 'section',
+                        'type' => 'section',
                         'fields' => [
                             [
                                 'type' => 'mrkdwn',

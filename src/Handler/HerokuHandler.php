@@ -4,21 +4,24 @@ namespace App\Handler;
 
 use App\External\HerokuApi;
 use GuzzleHttp\Exception\GuzzleException;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-class HerokuHandler
+readonly class HerokuHandler
 {
-    /** @var HerokuApi */
-    private $herokuApi;
-
-    public function __construct(HerokuApi $herokuApi)
+    public function __construct(private HerokuApi $herokuApi)
     {
-        $this->herokuApi = $herokuApi;
     }
 
     /**
-     * @throws GuzzleException
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ClientExceptionInterface
      */
-    public function updateDynoQuantity(array $appNames, array $dynoTypes, int $quantity)
+    public function updateDynoQuantity(array $appNames, array $dynoTypes, int $quantity): void
     {
         foreach ($appNames as $appName) {
             if (!$this->isAppManageable($appName)) {

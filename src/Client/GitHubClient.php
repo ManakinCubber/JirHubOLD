@@ -7,37 +7,42 @@ use Github\Api\Issue\Labels;
 use Github\Api\PullRequest;
 use Github\Api\PullRequest\Review;
 use Github\Api\Repository\Commits;
+use Github\AuthMethod;
 use Github\Client;
-use Github\HttpClient\Builder as HttpClientBuilder;
-use Lcobucci\JWT\Builder as JWTBuilder;
+use Github\HttpClient\Builder;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Encoding\ChainedFormatter;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 
 class GitHubClient
 {
-    /** @var Client */
-    private $client;
+    private Client $client;
 
     public function __construct(
-        HttpClientBuilder $httpClientBuilder,
-        JWTBuilder $jwtBuilder,
         string $gitHubAppId,
         string $gitHubPrivateRsaKey,
         string $gitHubAppInstallationId
     ) {
-        $this->client = new Client($httpClientBuilder, 'machine-man-preview');
+        $builder = new Builder();
 
-        $jwt = $jwtBuilder
+        $this->client = new Client($builder, 'machine-man-preview');
+
+        $config = Configuration::forSymmetricSigner(
+            new Sha256(),
+            Key\InMemory::plainText($gitHubPrivateRsaKey)
+        );
+
+        $now = new \DateTimeImmutable();
+        $jwt = $config->builder(ChainedFormatter::withUnixTimestampDates())
             ->issuedBy($gitHubAppId)
-            ->issuedAt(time())
-            ->expiresAt(time() + 60)
-            ->getToken(new Sha256(), new Key($gitHubPrivateRsaKey))
-        ;
+            ->issuedAt($now)
+            ->expiresAt($now->modify('+1 minute'))
+            ->getToken(new Sha256(), $config->signingKey());
 
-        $this->client->authenticate($jwt, null, Client::AUTH_JWT);
+        $this->client->authenticate($jwt->toString(), null, AuthMethod::JWT);
         $res = $this->client->apps()->createInstallationToken($gitHubAppInstallationId);
-
-        $this->client->authenticate($res['token'], null, Client::AUTH_HTTP_TOKEN);
+        $this->client->authenticate($res['token'], null, AuthMethod::ACCESS_TOKEN);
     }
 
     public function issues(): Issue

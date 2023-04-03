@@ -2,17 +2,13 @@
 
 namespace App\Model;
 
-class JiraIssueType
+readonly class JiraIssueType
 {
-    private int $id;
-    private string $name;
-    private bool $subtask;
-
-    public function __construct(int $id, string $name, bool $subtask)
-    {
-        $this->id      = $id;
-        $this->name    = $name;
-        $this->subtask = $subtask;
+    public function __construct(
+        private int $id,
+        private string $name,
+        private bool $subtask
+    ) {
     }
 
     public function getId(): int

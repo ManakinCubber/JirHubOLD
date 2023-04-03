@@ -2,18 +2,12 @@
 
 namespace App\Model;
 
-class JiraIssueStatus
+readonly class JiraIssueStatus
 {
-    /** @var int */
-    private $id;
-
-    /** @var string */
-    private $name;
-
-    public function __construct(int $id, string $name)
-    {
-        $this->id   = $id;
-        $this->name = $name;
+    public function __construct(
+        private int $id,
+        private string $name
+    ) {
     }
 
     public function getId(): int

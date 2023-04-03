@@ -7,59 +7,22 @@ use App\Model\JiraIssue;
 
 class PullRequest
 {
-    /** @var int */
-    private $id;
-
-    /** @var string */
-    private $title;
-
-    /** @var string */
-    private $body;
-
-    /** @var string */
-    private $headRef;
-
-    /** @var string */
-    private $baseRef;
-
-    /** @var string */
-    private $url;
-
-    /** @var string */
-    private $headSha;
-
-    /** @var GithubUser */
-    private $user;
-
-    /** @var string[] */
-    private $labels;
-
-    /** @var JiraIssue */
-    private $jiraIssue;
-
-    /** @var PullRequestReview[]|null */
-    private $reviews;
+    private ?JiraIssue $jiraIssue;
+    private ?array $reviews;
 
     public function __construct(
-        int $id,
-        string $title,
-        string $body,
-        string $headRef,
-        string $baseRef,
-        string $url,
-        string $headSha,
-        GithubUser $user,
-        array $labels
+        private readonly int $id,
+        private readonly string $title,
+        private readonly string $body,
+        private readonly string $headRef,
+        private readonly string $baseRef,
+        private readonly string $url,
+        private readonly string $headSha,
+        private readonly GithubUser $user,
+        private array $labels
     ) {
-        $this->id      = $id;
-        $this->title   = $title;
-        $this->body    = $body;
-        $this->headRef = $headRef;
-        $this->baseRef = $baseRef;
-        $this->url     = $url;
-        $this->headSha = $headSha;
-        $this->user    = $user;
-        $this->labels  = $labels;
+        $this->jiraIssue = null;
+        $this->reviews = null;
     }
 
     public function getId(): int
@@ -148,9 +111,6 @@ class PullRequest
         return $this->jiraIssue;
     }
 
-    /**
-     * @return PullRequestReview[]
-     */
     public function getReviews(): ?array
     {
         return $this->reviews;
@@ -166,15 +126,15 @@ class PullRequest
     public function normalize(): array
     {
         return [
-            'id'      => $this->id,
-            'title'   => $this->title,
-            'body'    => $this->body,
+            'id' => $this->id,
+            'title' => $this->title,
+            'body' => $this->body,
             'headRef' => $this->headRef,
             'baseRef' => $this->baseRef,
-            'url'     => $this->url,
+            'url' => $this->url,
             'headSha' => $this->headSha,
-            'user'    => $this->user->normalize(),
-            'labels'  => $this->labels,
+            'user' => $this->user->normalize(),
+            'labels' => $this->labels,
         ];
     }
 

@@ -11,69 +11,26 @@ use App\Repository\GitHub\Constant\PullRequestSearchFilters;
 use App\Repository\GitHub\PullRequestLabelRepository;
 use App\Repository\GitHub\PullRequestRepository;
 use App\Repository\GitHub\PullRequestReviewRepository;
-use App\Repository\Jira\JiraIssueRepository;
-use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class GitHubHandler
+readonly class GitHubHandler
 {
-    const CHANGES_REQUESTED = 'CHANGES_REQUESTED';
-    const APPROVED          = 'APPROVED';
-
-    /** @var PullRequestRepository */
-    private $pullRequestRepository;
-
-    /** @var PullRequestReviewRepository */
-    private $pullRequestReviewRepository;
-
-    /** @var PullRequestLabelRepository */
-    private $pullRequestLabelRepository;
-
-    /** @var JiraIssueRepository */
-    private $jiraIssueRepository;
-
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-
-    /** @var CacheItemPoolInterface */
-    private $cache;
-
-    /** @var array */
-    private $labels;
-
-    /** @var int */
-    private $approveCount;
-
-    /** @var string */
-    private $defaultBaseBranch;
-
-    /** @var LoggerInterface */
-    private $logger;
+    public const CHANGES_REQUESTED = 'CHANGES_REQUESTED';
+    public const APPROVED = 'APPROVED';
 
     public function __construct(
-        PullRequestRepository $pullRequestRepository,
-        PullRequestReviewRepository $pullRequestReviewRepository,
-        PullRequestLabelRepository $pullRequestLabelRepository,
-        JiraIssueRepository $jiraIssueRepository,
-        EventDispatcherInterface $eventDispatcher,
-        CacheItemPoolInterface $cache,
-        array $labels,
-        int $approveCount,
-        string $defaultBaseBranch,
-        LoggerInterface $logger
+        private PullRequestRepository $pullRequestRepository,
+        private PullRequestReviewRepository $pullRequestReviewRepository,
+        private PullRequestLabelRepository $pullRequestLabelRepository,
+        private EventDispatcherInterface $eventDispatcher,
+        private JiraHelper $jiraHelper,
+        private array $labels,
+        private int $approveCount,
+        private string $defaultBaseBranch,
+        private LoggerInterface $logger
     ) {
-        $this->pullRequestRepository       = $pullRequestRepository;
-        $this->pullRequestReviewRepository = $pullRequestReviewRepository;
-        $this->pullRequestLabelRepository  = $pullRequestLabelRepository;
-        $this->jiraIssueRepository         = $jiraIssueRepository;
-        $this->eventDispatcher             = $eventDispatcher;
-        $this->cache                       = $cache;
-        $this->labels                      = $labels;
-        $this->approveCount                = $approveCount;
-        $this->defaultBaseBranch           = $defaultBaseBranch;
-        $this->logger                      = $logger;
     }
 
     /**
@@ -117,7 +74,7 @@ class GitHubHandler
     public function doesReviewBranchExists(string $reviewBranchName)
     {
         return \in_array(
-            $this->labels['validation_prefix'] . $reviewBranchName,
+            $this->labels['validation_prefix'].$reviewBranchName,
             $this->labels['validation_environments'],
             true
         );
@@ -131,7 +88,7 @@ class GitHubHandler
         $pullRequests = $this->pullRequestRepository->search(
             [
                 PullRequestSearchFilters::LABELS => [
-                    $this->labels['validation_prefix'] . $reviewBranchName,
+                    $this->labels['validation_prefix'].$reviewBranchName,
                 ],
             ]
         );
@@ -165,7 +122,7 @@ class GitHubHandler
             return 'Pull Request not found.';
         }
 
-        if ($pullRequest->hasLabel($this->labels['validation_prefix'] . $reviewBranchName)) {
+        if ($pullRequest->hasLabel($this->labels['validation_prefix'].$reviewBranchName)) {
             return 'OK';
         }
 
@@ -177,15 +134,15 @@ class GitHubHandler
         }
 
         if (!$this->doesReviewBranchExists($reviewBranchName)) {
-            return 'The review branch "' . $reviewBranchName . '" does not exist or does not have any attributed label.';
+            return 'The review branch "'.$reviewBranchName.'" does not exist or does not have any attributed label.';
         }
 
         if (!$this->isReviewBranchAvailable($reviewBranchName, $pullRequest)) {
-            return 'The review branch "' . $reviewBranchName . '" is already used by another PR.';
+            return 'The review branch "'.$reviewBranchName.'" is already used by another PR.';
         }
 
         if (!$this->isPullRequestApproved($pullRequest)) {
-            return 'The pull request with head branch "' . $headBranchName . '" does not have enough approving reviews or has requested changes.';
+            return 'The pull request with head branch "'.$headBranchName.'" does not have enough approving reviews or has requested changes.';
         }
 
         return 'OK';
@@ -193,7 +150,7 @@ class GitHubHandler
 
     public function removeReviewLabels(PullRequest $pullRequest)
     {
-        $reviewLabels   = $this->labels['validation_environments'];
+        $reviewLabels = $this->labels['validation_environments'];
         $reviewLabels[] = $this->labels['validation_required'];
 
         foreach ($reviewLabels as $reviewLabel) {
@@ -238,11 +195,11 @@ class GitHubHandler
         $this->removeReviewLabels($pullRequest);
         $this->pullRequestLabelRepository->create(
             $pullRequest,
-            $this->labels['validation_prefix'] . $reviewBranchName
+            $this->labels['validation_prefix'].$reviewBranchName
         );
 
-        $jiraIssueKey = JiraHelper::extractIssueKeyFromString($headBranchName)
-            ?? JiraHelper::extractIssueKeyFromString($pullRequest->getTitle());
+        $jiraIssueKey = $this->jiraHelper->extractIssueKeyFromString($headBranchName)
+            ?? $this->jiraHelper->extractIssueKeyFromString($pullRequest->getTitle());
 
         $this->eventDispatcher->dispatch(new LabelsAppliedEvent($pullRequest, $reviewBranchName, $jiraIssueKey));
 
@@ -276,7 +233,8 @@ class GitHubHandler
         if (null === $pullRequest) {
             $this->logger->warning(
                 sprintf(
-                    'Could not find pull request from webhook data : %s', json_encode($webhookData)
+                    'Could not find pull request from webhook data : %s',
+                    json_encode($webhookData)
                 )
             );
 

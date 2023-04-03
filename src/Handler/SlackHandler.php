@@ -10,20 +10,19 @@ use GuzzleHttp\Client;
 
 class SlackHandler
 {
-    const ACTION_VALIDATION_ASSIGN  = 'assign-pull-request';
-    const ACTION_VALIDATION_APPROVE = 'approve-pull-request';
-    const ACTION_VALIDATION_REJECT  = 'reject-pull-request';
+    public const ACTION_VALIDATION_ASSIGN = 'assign-pull-request';
+    public const ACTION_VALIDATION_APPROVE = 'approve-pull-request';
+    public const ACTION_VALIDATION_REJECT = 'reject-pull-request';
 
-    /** @var Client */
-    private $client;
+    private Client $client;
 
     public function __construct(string $token)
     {
         $this->client = new Client(
             [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . $token,
-                    'Content-Type'  => 'application/json',
+                    'Authorization' => 'Bearer '.$token,
+                    'Content-Type' => 'application/json',
                 ],
             ]
         );
@@ -31,9 +30,9 @@ class SlackHandler
 
     public function handleInteraction(array $body): array
     {
-        $value       = json_decode($body['actions'][0]['value'], true);
+        $value = json_decode($body['actions'][0]['value'], true);
         $responseUrl = $body['response_url'];
-        $actionId    = $body['actions'][0]['action_id'];
+        $actionId = $body['actions'][0]['action_id'];
 
         switch ($actionId) {
             case self::ACTION_VALIDATION_ASSIGN:

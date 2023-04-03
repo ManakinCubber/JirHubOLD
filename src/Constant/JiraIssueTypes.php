@@ -4,9 +4,9 @@ namespace App\Constant;
 
 class JiraIssueTypes
 {
-    const EPIC     = 'Epic';
-    const STORY    = 'Story';
-    const BUG      = 'Bug';
-    const TASK     = 'Task';
-    const SUB_TASK = 'Sub-task';
+    public const EPIC = 'Epic';
+    public const STORY = 'Story';
+    public const BUG = 'Bug';
+    public const TASK = 'Task';
+    public const SUB_TASK = 'Sub-task';
 }

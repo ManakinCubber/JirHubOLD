@@ -4,11 +4,11 @@ namespace App\Constant;
 
 class GithubLabels
 {
-    const PRIO    = 'Prio';
-    const BUG     = 'bug';
-    const WIP     = 'WIP';
-    const WAIT    = 'WAIT';
-    const STANDBY = 'Standby';
+    public const PRIO = 'Prio';
+    public const BUG = 'bug';
+    public const WIP = 'WIP';
+    public const WAIT = 'WAIT';
+    public const STANDBY = 'Standby';
 
     public static function getDevelopmentInProgressLabels()
     {

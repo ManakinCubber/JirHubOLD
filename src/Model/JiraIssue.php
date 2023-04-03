@@ -6,47 +6,22 @@ use Psr\Http\Message\UriInterface;
 
 class JiraIssue
 {
-    private int $id;
-    private string $key;
-    private string $summary;
-    private bool $flagged;
-    private string $priority;
-    private JiraIssueType $type;
-    private JiraIssueStatus $status;
-    private \DateTimeInterface $createdAt;
-    private UriInterface $uri;
     private \DateInterval $lifespan;
-    private ?string $epicKey;
-    private ?\DateTimeInterface $resolvedAt;
-    private ?\DateTimeInterface $publishedAt;
 
     public function __construct(
-        int $id,
-        string $key,
-        string $summary,
-        bool $flagged,
-        string $priority,
-        JiraIssueType $type,
-        JiraIssueStatus $status,
-        \DateTimeInterface $createdAt,
-        UriInterface $uri,
-        ?string $epicKey,
-        ?\DateTimeInterface $publishedAt,
-        ?\DateTimeInterface $resolvedAt
+        private readonly int $id,
+        private readonly string $key,
+        private readonly string $summary,
+        private readonly bool $flagged,
+        private readonly string $priority,
+        private readonly JiraIssueType $type,
+        private readonly JiraIssueStatus $status,
+        private readonly \DateTimeInterface $createdAt,
+        private readonly UriInterface $uri,
+        private readonly ?string $epicKey,
+        private readonly ?\DateTimeInterface $publishedAt,
+        private readonly ?\DateTimeInterface $resolvedAt
     ) {
-        $this->id          = $id;
-        $this->key         = $key;
-        $this->summary     = $summary;
-        $this->flagged     = $flagged;
-        $this->priority    = $priority;
-        $this->type        = $type;
-        $this->status      = $status;
-        $this->createdAt   = $createdAt;
-        $this->uri         = $uri;
-        $this->epicKey     = $epicKey;
-        $this->publishedAt = $publishedAt;
-        $this->resolvedAt  = $resolvedAt;
-
         $this->computeLifespan();
     }
 
@@ -118,7 +93,7 @@ class JiraIssue
     private function computeLifespan(): void
     {
         $startDate = $this->publishedAt ?? $this->createdAt;
-        $endDate   = $this->resolvedAt  ?? new \DateTimeImmutable();
+        $endDate = $this->resolvedAt ?? new \DateTimeImmutable();
 
         $this->lifespan = $startDate->diff($endDate);
     }

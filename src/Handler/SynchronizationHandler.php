@@ -17,57 +17,21 @@ use App\Repository\GitHub\PullRequestRepository;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
 
-class SynchronizationHandler
+readonly class SynchronizationHandler
 {
-    const RELEASE_PR_TITLE_PREFIX = 'MEP';
-
-    /** @var CacheItemPoolInterface */
-    private $cache;
-
-    /** @var DeleteValidationRequiredLabelCommand */
-    private $deleteValidationRequiredLabelCommand;
-
-    /** @var AddValidationRequiredLabelCommand */
-    private $addValidationRequiredLabelCommand;
-
-    /** @var UpdatePullRequestDescriptionCommand */
-    private $updatePullRequestDescriptionCommand;
-
-    /** @var UpdatePullRequestLabelsCommand */
-    private $updatePullRequestLabelsCommand;
-
-    /** @var UpdatePullRequestTitleCommand */
-    private $updatePullRequestTitleCommand;
-
-    /** @var TransitionJiraIssueToInProgressCommand */
-    private $transitionJiraIssueToInProgressCommand;
-
-    /** @var TransitionJiraIssueToInReviewCommand */
-    private $transitionJiraIssueToInReviewCommand;
-
-    /** @var TransitionJiraIssueToToValidateCommand */
-    private $transitionJiraIssueToToValidateCommand;
+    public const RELEASE_PR_TITLE_PREFIX = 'MEP';
 
     public function __construct(
-        CacheItemPoolInterface $cache,
-        DeleteValidationRequiredLabelCommand $deleteValidationRequiredLabelCommand,
-        AddValidationRequiredLabelCommand $addValidationRequiredLabelCommand,
-        UpdatePullRequestLabelsCommand $updatePullRequestLabelsCommand,
-        UpdatePullRequestDescriptionCommand $updatePullRequestDescriptionCommand,
-        UpdatePullRequestTitleCommand $updatePullRequestTitleCommand,
-        TransitionJiraIssueToInProgressCommand $transitionJiraIssueToInProgressCommand,
-        TransitionJiraIssueToInReviewCommand $transitionJiraIssueToInReviewCommand,
-        TransitionJiraIssueToToValidateCommand $transitionJiraIssueToToValidateCommand
+        private CacheItemPoolInterface $cache,
+        private DeleteValidationRequiredLabelCommand $deleteValidationRequiredLabelCommand,
+        private AddValidationRequiredLabelCommand $addValidationRequiredLabelCommand,
+        private UpdatePullRequestLabelsCommand $updatePullRequestLabelsCommand,
+        private UpdatePullRequestDescriptionCommand $updatePullRequestDescriptionCommand,
+        private UpdatePullRequestTitleCommand $updatePullRequestTitleCommand,
+        private TransitionJiraIssueToInProgressCommand $transitionJiraIssueToInProgressCommand,
+        private TransitionJiraIssueToInReviewCommand $transitionJiraIssueToInReviewCommand,
+        private TransitionJiraIssueToToValidateCommand $transitionJiraIssueToToValidateCommand
     ) {
-        $this->cache                                  = $cache;
-        $this->deleteValidationRequiredLabelCommand   = $deleteValidationRequiredLabelCommand;
-        $this->addValidationRequiredLabelCommand      = $addValidationRequiredLabelCommand;
-        $this->updatePullRequestLabelsCommand         = $updatePullRequestLabelsCommand;
-        $this->updatePullRequestDescriptionCommand    = $updatePullRequestDescriptionCommand;
-        $this->updatePullRequestTitleCommand          = $updatePullRequestTitleCommand;
-        $this->transitionJiraIssueToInProgressCommand = $transitionJiraIssueToInProgressCommand;
-        $this->transitionJiraIssueToInReviewCommand   = $transitionJiraIssueToInReviewCommand;
-        $this->transitionJiraIssueToToValidateCommand = $transitionJiraIssueToToValidateCommand;
     }
 
     /**

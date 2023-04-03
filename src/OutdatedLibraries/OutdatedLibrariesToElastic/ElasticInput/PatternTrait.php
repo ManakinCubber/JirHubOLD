@@ -8,9 +8,9 @@ trait PatternTrait
 {
     private function patternArray(string $project, Library $value): array
     {
-        $name             = $value->getName();
+        $name = $value->getName();
         $installedVersion = $value->getInstalledVersion();
-        $latestVersion    = $value->getLatestVersion();
+        $latestVersion = $value->getLatestVersion();
 
         return ['project' => $project, 'library' => $name, 'version' => $installedVersion, 'latestVersion' => $latestVersion];
     }

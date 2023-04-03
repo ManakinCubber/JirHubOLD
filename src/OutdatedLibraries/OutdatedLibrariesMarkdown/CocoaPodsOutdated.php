@@ -3,22 +3,20 @@
 namespace App\OutdatedLibraries\OutdatedLibrariesMarkdown;
 
 use App\OutdatedLibraries\OutdatedFileToTable\OutdatedFileToTable;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'collect:cocoapods-outdated-libraries')]
 class CocoaPodsOutdated extends Command
 {
     use PatternTrait;
-    /** @var string */
-    protected static $defaultName = 'collect:cocoapods-outdated-libraries';
-    private OutdatedFileToTable $OutdatedFileToTable;
 
-    public function __construct(OutdatedFileToTable $OutdatedFileToTable)
+    public function __construct(private readonly OutdatedFileToTable $OutdatedFileToTable)
     {
         parent::__construct();
-        $this->OutdatedFileToTable = $OutdatedFileToTable;
     }
 
     protected function configure()

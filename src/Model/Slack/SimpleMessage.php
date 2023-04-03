@@ -2,14 +2,10 @@
 
 namespace App\Model\Slack;
 
-class SimpleMessage implements SlackMessage
+readonly class SimpleMessage implements SlackMessage
 {
-    /** @var string */
-    private $message;
-
-    public function __construct(string $message)
+    public function __construct(private string $message)
     {
-        $this->message = $message;
     }
 
     public function normalize(): array

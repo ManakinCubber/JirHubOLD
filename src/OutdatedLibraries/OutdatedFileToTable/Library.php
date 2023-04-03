@@ -2,17 +2,13 @@
 
 namespace App\OutdatedLibraries\OutdatedFileToTable;
 
-class Library
+readonly class Library
 {
-    private string $name;
-    private string $installedVersion;
-    private string $latestVersion;
-
-    public function __construct(string $name, string $version, string $latestVersion)
-    {
-        $this->name             = $name;
-        $this->installedVersion = $version;
-        $this->latestVersion    = $latestVersion;
+    public function __construct(
+        private string $name,
+        private string $installedVersion,
+        private string $latestVersion
+    ) {
     }
 
     public function getName(): string

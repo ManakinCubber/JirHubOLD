@@ -5,25 +5,13 @@ namespace App\Repository\GitHub;
 use App\Client\GitHubClient;
 use App\Model\Github\PullRequest;
 
-class PullRequestLabelRepository
+readonly class PullRequestLabelRepository
 {
-    /** @var GitHubClient */
-    private $client;
-
-    /** @var string */
-    private $repositoryOwner;
-
-    /** @var string */
-    private $repositoryName;
-
     public function __construct(
-        GitHubClient $client,
-        string $repositoryOwner,
-        string $repositoryName
+        private GitHubClient $client,
+        private string $repositoryOwner,
+        private string $repositoryName
     ) {
-        $this->client          = $client;
-        $this->repositoryOwner = $repositoryOwner;
-        $this->repositoryName  = $repositoryName;
     }
 
     public function create(PullRequest $pullRequest, string $label): void

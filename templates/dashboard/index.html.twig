@@ -1,210 +1,217 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <section>
+
+        <nav class="navbar bg-body-tertiary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{{ path('index') }}">
+                    <img src="{{ asset('img/tiime.svg') }}" alt="Logo" width="22" height="25"
+                         class="d-inline-block align-text-top me-1">
+                    JirHub
+                </a>
+            </div>
+        </nav>
+
+        <div class="container-fluid">
+            <div class="row">
+                {% for env in review_environments %}
+                    {% set free = env.jirHubTask is null %}
+                    <div class="col-xl-2 col-lg-3 col-md-4 mt-3 environment environment-{{ env.name | lower }} {{ free ? 'free' :'' }}">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between">
+                                <span>
+                                    {% if free %}
+                                        <i>Disponible</i>
+                                    {% else %}
+                                        {% if env.jirHubTask.getJiraIssue is not null %}
+                                            {{ env.jirHubTask.getJiraIssue.getKey|upper }}
+                                        {% else %}
+                                            Pas de ticket
+                                        {% endif %}
+                                    {% endif %}
+                                </span>
+                                <span>
+                                    {{ env.owner }}
+                                </span>
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                {% if free is same as false %}
+                                    <p class="card-text pr-title text-center flex-grow-1 d-flex align-items-center justify-content-center">
+                                        {{ env.pullRequestTitle }}
+                                    </p>
+                                    <div class="align-content-end">
+                                        <div class="d-flex justify-content-between">
+                                            <div class="text-center d-flex">
+                                                {% if env.jirHubTask.githubPullRequest is not null %}
+                                                    <a target="_blank"
+                                                       href="{{ env.jirHubTask.githubPullRequest.getUrl }}">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24px"
+                                                             height="24px"
+                                                             viewBox="0 0 20 20">
+                                                            <path d="M10 0c5.523 0 10 4.59 10 10.253 0 4.529-2.862 8.371-6.833 9.728-.507.101-.687-.219-.687-.492l.012-2.814c0-.956-.32-1.58-.679-1.898 2.227-.254 4.567-1.121 4.567-5.059a4.01 4.01 0 0 0-1.03-2.752c.104-.259.447-1.302-.098-2.714 0 0-.838-.275-2.747 1.051-.799-.227-1.655-.341-2.505-.345-.85.004-1.705.118-2.503.345-1.911-1.326-2.751-1.051-2.751-1.051-.543 1.412-.2 2.455-.097 2.714-.639.718-1.03 1.632-1.03 2.752 0 3.928 2.335 4.808 4.556 5.067-.286.256-.545.708-.635 1.371-.57.262-2.018.715-2.91-.852 0 0-.529-.985-1.533-1.057 0 0-.975-.013-.068.623 0 0 .655.315 1.11 1.5 0 0 .587 1.83 3.369 1.21l.014 1.909c0 .271-.184.588-.683.493C2.865 18.627 0 14.783 0 10.253 0 4.59 4.478 0 10 0"
+                                                                  fill-rule="evenodd"/>
+                                                        </svg>
+                                                    </a>
+                                                {% endif %}
+
+                                                {% if  env.jirHubTask.githubPullRequest is not null and env.jirHubTask.getJiraIssue is not null %}
+                                                    <div class="me-2"></div>
+                                                {% endif %}
+
+                                                {% if env.jirHubTask.getJiraIssue is not null %}
+                                                    <a target="_blank" href="{{ env.jirHubTask.getJiraIssue.getUri }}">
+                                                        <svg fill="#000000" width="24px" height="24px"
+                                                             viewBox="0 0 24 24"
+                                                             role="img" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M12.004 0c-2.35 2.395-2.365 6.185.133 8.585l3.412 3.413-3.197 3.198a6.501 6.501 0 0 1 1.412 7.04l9.566-9.566a.95.95 0 0 0 0-1.344L12.004 0zm-1.748 1.74L.67 11.327a.95.95 0 0 0 0 1.344C4.45 16.44 8.22 20.244 12 24c2.295-2.298 2.395-6.096-.08-8.533l-3.47-3.469 3.2-3.2c-1.918-1.955-2.363-4.725-1.394-7.057z"/>
+                                                        </svg>
+                                                    </a>
+                                                {% endif %}
 
 
-	<section class="section">
-		<div style="position:absolute;top:15px;right:15px">
-			<a href="/changelog" class="button is-normal" style="display:block">view current changelog (raw)</a>
-		</div>
+                                            </div>
+                                            <div>
+                                                <div class="dropdown">
+                                                    <button class="btn btn-link p-0 border-0" type="button"
+                                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                             viewBox="0 0 24 24" stroke-width="2"
+                                                             stroke-linejoin="round">
+                                                            <path d="M13 5a1 1 0 1 0-2 0 1 1 0 1 0 2 0zm0 7a1 1 0 1 0-2 0 1 1 0 1 0 2 0zm0 7a1 1 0 1 0-2 0 1 1 0 1 0 2 0z"/>
+                                                        </svg>
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li>
+                                                            <a class="dropdown-item"
+                                                               href="https://apps.chronos-review-{{ env.name }}.preprod.tiime.tech"
+                                                               target="_blank">
+                                                                Tiime Apps
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item"
+                                                               href="https://expert.chronos-review-{{ env.name }}.preprod.tiime.tech"
+                                                               target="_blank">
+                                                                Tiime Expert
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item"
+                                                               href="https://pro.chronos-review-{{ env.name }}.preprod.tiime.tech"
+                                                               target="_blank">
+                                                                Tiime Pulse
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item"
+                                                               href="https://data.chronos-review-{{ env.name }}.preprod.tiime.tech"
+                                                               target="_blank">
+                                                                Tiime Data
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item"
+                                                               href="https://care.chronos-review-{{ env.name }}.preprod.tiime.tech"
+                                                               target="_blank">
+                                                                Tiime Care
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <hr class="dropdown-divider">
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item"
+                                                               href="https://argo.preprod.tiime.tech/applications/argocd/chronos-review-{{ env.name }}"
+                                                               target="_blank">
+                                                                ArgoCD Dashboard
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
 
-		<div class="container is-fluid">
+        <div class="container-fluid pr-links">
+            <div class="row">
+                <div class="col-md-4 mt-4">
+                    <div class="card">
+                        <div class="card-header">Pull requests à valider</div>
+                        <div class="card-body">
+                            <ul>
+                                {% for pullRequest in pull_requests_to_deploy %}
+                                    <li class="mb-2">
+                                        <a target="_blank" href="{{ pullRequest.getUrl }}">
+                                            {% if 'Standby' in pullRequest.labels %}
+                                                <span>Standby</span>
+                                            {% endif %}
+                                            {% if 'WAIT' in pullRequest.labels %}
+                                                <span>WAIT</span>
+                                            {% endif %}
+                                            {{ pullRequest.getTitle }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
-			<h1 class="title has-text-centered">JIRHUB STATUS</h1>
+                <div class="col-md-4 mt-4">
+                    <div class="card">
+                        <div class="card-header">Pull requests à merger</div>
+                        <div class="card-body">
+                            <ul>
+                                {% for pullRequest in pull_requests_to_merge_on_dev %}
+                                    <li class="mb-2">
+                                        <a target="_blank" href="{{ pullRequest.getUrl }}">
+                                            {% if 'Standby' in pullRequest.labels %}
+                                                <span>Standby</span>
+                                            {% endif %}
+                                            {% if 'WAIT' in pullRequest.labels %}
+                                                <span>WAIT</span>
+                                            {% endif %}
+                                            {{ pullRequest.getTitle }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
-			<section>
-				<div id="environments" class="tile is-ancestor">
-					{% for env in review_environments %}
-						{% set free = env.jirHubTask is null %}
-
-						<div class="tile is-parent is-2">
-							<div class="tile is-child box env {{ env.name }} {% if free %} free {% endif %}">
-
-								{% if free %}
-									<div>
-										<p class="subtitle is-size-4">Disponible</p>
-										{% if env.owner is not null %}
-											<p class="subtitle is-size-6">{{ env.owner }}</p>
-										{% endif %}
-									</div>
-								{% else %}
-
-									<div class="level">
-										<div class="level-left">
-											<div class="level-item">
-												<div>
-													{% if env.jirHubTask.getJiraIssue is not null %}
-														<p class="subtitle is-size-4">{{ env.jirHubTask.getJiraIssue.getKey|upper }}</p>
-													{% else %}
-														<p class="subtitle is-size-4">Unknown Jira Ticket</p>
-													{% endif %}
-													<p class="is-size-6">{{ env.owner }}</p>
-												</div>
-											</div>
-										</div>
-
-										<div class="level-right">
-											<div class="level-item">
-												<div class="quick-links dropdown is-hoverable">
-													<div class="dropdown-trigger">
-											<span class="icon is-size-5" aria-haspopup="true" aria-controls="dropdown-menu">
-												<i class="fas fa-ellipsis-h"></i>
-											</span>
-													</div>
-													<div class="dropdown-menu" id="dropdown-menu" role="menu">
-														<div class="dropdown-content">
-															<a href="https://apps.chronos-review-{{ env.name }}.preprod.tiime.tech" class="dropdown-item" target="_blank">
-																Open the
-																{{ env.name }}
-																Tiime Apps
-															</a>
-															<a href="https://expert.chronos-review-{{ env.name }}.preprod.tiime.tech" class="dropdown-item" target="_blank">
-																Open the
-																{{ env.name }}
-																Tiime Expert
-															</a>
-															<a href="https://pro.chronos-review-{{ env.name }}.preprod.tiime.tech" class="dropdown-item" target="_blank">
-																Open the
-																{{ env.name }}
-																Tiime Pulse
-															</a>
-															<a href="https://data.chronos-review-{{ env.name }}.preprod.tiime.tech" class="dropdown-item" target="_blank">
-																Open the
-																{{ env.name }}
-																Tiime Data
-															</a>
-															<a href="https://care.chronos-review-{{ env.name }}.preprod.tiime.tech" class="dropdown-item" target="_blank">
-																Open the
-																{{ env.name }}
-																Tiime Care
-															</a>
-															<div class="dropdown-divider"></div>
-															<a href="https://argo.preprod.tiime.tech/applications/argocd/chronos-review-{{ env.name }}" class="dropdown-item" target="_blank">
-																Open the
-																{{ env.name }}
-																ArgoCD Dashboard
-															</a>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-
-									<div class="links">
-										{% if env.jirHubTask.getJiraIssue is not null %}
-											<span class="jira is-right">
-												<a target="_blank" href="{{ env.jirHubTask.getJiraIssue.getUri }}">
-													<i class="fab fa-jira"></i>
-												</a>
-											</span>
-										{% endif %}
-										<span class="github  is-right">
-											<a target="_blank" href="{{ env.jirHubTask.githubPullRequest.getUrl }}">
-												<i class="fab fa-github"></i>
-											</a>
-										</span>
-									</div>
-
-
-
-									<p class="is-center has-text-centered ">{{ env.pullRequestTitle }}</p>
-
-								{% endif %}
-							</div>
-						</div>
-					{% endfor %}
-				</div>
-			</section>
-		</div>
-
-		<div class="container">
-			<div class="columns">
-				<div class="column">
-					<section class="box">
-						<h2 class="is-size-4 is-bold">Pull requests à valider</h2>
-
-						<ul class="pull_requests_list">
-							{% for pullRequest in pull_requests_to_deploy %}
-								<li class="pull_requests">
-									{% if 'Standby' in pullRequest.labels %}
-										<span class="tag is-warning">Standby</span>
-									{% endif %}
-									{% if 'WAIT' in pullRequest.labels %}
-										<span class="tag is-danger">WAIT</span>
-									{% endif %}
-
-									{{ pullRequest.getTitle }}
-									<a target="_blank" href="{{ pullRequest.getUrl }}">
-										<i class="fab fa-github"></i>
-									</a>
-
-									{% if pullRequest.getJiraIssue is not null %}
-										<a target="_blank" href="{{ pullRequest.getJiraIssue.getUri }}">
-											<i class="fab fa-jira"></i>
-										</a>
-									{% endif %}
-								</li>
-							{% endfor %}
-						</ul>
-					</section>
-				</div>
-				<div class="column">
-					<section class="box ">
-						<h2 class="is-size-4 is-bold">Pull requests à merger</h2>
-
-						<ul class="pull_requests_list">
-							{% for pullRequest in pull_requests_to_merge_on_dev %}
-								<li class="pull_requests">
-									{% if 'Standby' in pullRequest.labels %}
-										<span class="tag is-warning">Standby</span>
-									{% endif %}
-									{% if 'WAIT' in pullRequest.labels %}
-										<span class="tag is-danger">WAIT</span>
-									{% endif %}
-
-									{{ pullRequest.getTitle }}
-									<a target="_blank" href="{{ pullRequest.getUrl }}">
-										<i class="fab fa-github"></i>
-									</a>
-
-									{% if pullRequest.getJiraIssue is not null %}
-										<a target="_blank" href="{{ pullRequest.getJiraIssue.getUri }}">
-											<i class="fab fa-jira"></i>
-										</a>
-									{% endif %}
-								</li>
-							{% endfor %}
-						</ul>
-					</section>
-				</div>
-
-				<div class="column">
-					<section class="box">
-						<h2 class="is-size-4 is-bold">Changelog <em>(prochaine MEP)</em></h2>
-
-						<ul class="pull_requests_list">
-							{% for i in 0..(num-1) %}
-								{% if type[i]=='string' and not (messageLinks[i] starts with '---') %}
-									<li class="pull_requests has-text-weight-bold">{{messageLinks[i]}}</li>
-								{% endif %}
-								{% if type[i]=='array'  %}
-									<li class="pull_requests">
-										<span class="ta-title">{{messageLinks[i]['message']}}</span>
-										<span class="github">
-											<a target="_blank" href="{{ messageLinks[i]['html_url'] }}">
-												<i class="fab fa-github"></i>
-											</a>
-										</span>
-									</li>
-								{% endif %}
-							{% endfor %}
-						</ul>
-					</section>
-				</div>
-			</div>
-
-		</div>
-
-	</section>
+                <div class="col-md-4 mt-4">
+                    <div class="card">
+                        <div class="card-header">
+                            Changelog <i>(prochaine MEP)</i>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                {% for i in 0..(num-1) %}
+                                    {% if type[i]=='string' and not (messageLinks[i] starts with '---') %}
+                                        <li class="list-unstyled fw-bold mb-2 {{ i is same as 0 ? '' : 'mt-4' }}">{{ messageLinks[i] }}</li>
+                                    {% endif %}
+                                    {% if type[i]=='array' %}
+                                        <li class="mb-2">
+                                            <a target="_blank" href="{{ messageLinks[i]['html_url'] }}">
+                                                {{ messageLinks[i]['message'] }}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock body %}

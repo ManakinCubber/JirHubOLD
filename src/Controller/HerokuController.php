@@ -13,34 +13,20 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class HerokuController extends AbstractController
 {
-    /** @var SlackClient */
-    protected $slack;
+    private FilesystemAdapter $cache;
 
-    /** @var ChangelogHandler */
-    protected $changelogHandler;
-
-    /** @var FilesystemAdapter */
-    private $cache;
-
-    private string $deployHookToken;
-    private string $repositoryOwner;
-    private string $repositoryName;
-    private string $slackChangelogChannel;
-
-    public function __construct(SlackClient $slack, ChangelogHandler $changelogHandler, string $deployHookToken, string $repositoryOwner, string $repositoryName, string $slackChangelogChannel)
-    {
-        $this->slack                 = $slack;
-        $this->changelogHandler      = $changelogHandler;
-        $this->deployHookToken       = $deployHookToken;
-        $this->repositoryOwner       = $repositoryOwner;
-        $this->repositoryName        = $repositoryName;
-        $this->slackChangelogChannel = $slackChangelogChannel;
-        $this->cache                 = new FilesystemAdapter();
+    public function __construct(
+        private readonly SlackClient $slack,
+        private readonly ChangelogHandler $changelogHandler,
+        private readonly string $deployHookToken,
+        private readonly string $repositoryOwner,
+        private readonly string $repositoryName,
+        private readonly string $slackChangelogChannel
+    ) {
+        $this->cache = new FilesystemAdapter();
     }
 
     /**
-     * @Route("/heroku/deploy-hook", name="heroku_deploy_hook", methods={"POST"})
-     *
      * Available post parameters are:
      * - app (ex: chronos-api-production)
      * - app_uuid
@@ -50,8 +36,9 @@ class HerokuController extends AbstractController
      * - head_long (commit hash)
      * - prev_head (commit hash)
      * - git_log
-     * - release (ex: v42)
+     * - release (ex: v42).
      */
+    #[Route('/heroku/deploy-hook', name: 'heroku_deploy_hook', methods: ['POST'])]
     public function herokuDeployHookAction(Request $request): Response
     {
         $token = $request->query->get('token');
@@ -61,14 +48,14 @@ class HerokuController extends AbstractController
         }
 
         $repositoryOwner = $this->repositoryOwner;
-        $repositoryName  = $this->repositoryName;
+        $repositoryName = $this->repositoryName;
 
         $requestBag = $request->request;
 
-        $head      = $requestBag->get('head');
+        $head = $requestBag->get('head');
         $prev_head = $requestBag->get('prev_head');
-        $diff_url  = sprintf('https://github.com/%s/%s/compare/%s...%s', $repositoryOwner, $repositoryName, $prev_head, $head);
-        $release   = $requestBag->get('release');
+        $diff_url = sprintf('https://github.com/%s/%s/compare/%s...%s', $repositoryOwner, $repositoryName, $prev_head, $head);
+        $release = $requestBag->get('release');
 
         $lastRelease = $this->cache->getItem('lastRelease');
 
@@ -82,10 +69,10 @@ class HerokuController extends AbstractController
         $commits = $this->changelogHandler->getChangelog($prev_head, $head);
 
         $this->slack->filesUpload([
-            'channels'        => $this->slackChangelogChannel,
-            'content'         => implode(PHP_EOL, $commits),
-            'title'           => 'Changelog for release ' . $release,
-            'filename'        => 'changelog_release_' . $release . '.txt',
+            'channels' => $this->slackChangelogChannel,
+            'content' => implode(PHP_EOL, $commits),
+            'title' => 'Changelog for release '.$release,
+            'filename' => 'changelog_release_'.$release.'.txt',
             'initial_comment' => sprintf('<%s|MEP Back>', $diff_url),
         ]);
 

@@ -4,21 +4,15 @@ namespace App\Model;
 
 class ReviewEnvironment
 {
-    /** @var string */
-    private $name;
+    private ?JirHubTask $jirHubTask;
+    private ?string $pullRequestTitle;
 
-    /** @var JirHubTask */
-    private $jirHubTask;
-
-    /** @var string */
-    private $pullRequestTitle;
-
-    private ?string $owner;
-
-    public function __construct(string $name, ?string $owner = null)
-    {
-        $this->name  = $name;
-        $this->owner = $owner;
+    public function __construct(
+        private readonly string $name,
+        private readonly ?string $owner = null
+    ) {
+        $this->jirHubTask = null;
+        $this->pullRequestTitle = null;
     }
 
     public function getName(): string
@@ -46,7 +40,7 @@ class ReviewEnvironment
     public function getPullRequestTitle(): string
     {
         if (null === $this->pullRequestTitle) {
-            $explodeTitle           = preg_split('/\[?ta-[0-9]{1,9}(\]|( ?(:|\|)))? ?/i', $this->jirHubTask->getGithubPullRequest()->getTitle());
+            $explodeTitle = preg_split('/\[?ta-[0-9]{1,9}(\]|( ?(:|\|)))? ?/i', $this->jirHubTask->getGithubPullRequest()->getTitle());
             $this->pullRequestTitle = trim(array_pop($explodeTitle));
         }
 

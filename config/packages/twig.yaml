@@ -1,7 +1,6 @@
 twig:
-    exception_controller: ~
     default_path: '%kernel.project_dir%/templates'
-    debug: '%kernel.debug%'
-    strict_variables: '%kernel.debug%'
-    globals:
-        jira_host: '%env(JIRA_HOST)%'
+
+when@test:
+    twig:
+        strict_variables: true

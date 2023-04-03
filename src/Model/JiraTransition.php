@@ -2,15 +2,12 @@
 
 namespace App\Model;
 
-class JiraTransition
+readonly class JiraTransition
 {
-    private $id;
-    private $comment;
-
-    public function __construct(int $id, string $comment = '')
-    {
-        $this->id      = $id;
-        $this->comment = $comment;
+    public function __construct(
+        private int $id,
+        private string $comment = ''
+    ) {
     }
 
     public function toArray(): array
@@ -21,7 +18,7 @@ class JiraTransition
                     [
                         'add' => [
                             'body' => [
-                                'type'    => 'doc',
+                                'type' => 'doc',
                                 'version' => 1,
                                 'content' => [
                                     ['text' => $this->comment, 'type' => 'text'],

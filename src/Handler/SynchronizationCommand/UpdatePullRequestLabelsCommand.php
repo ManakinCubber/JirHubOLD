@@ -6,34 +6,20 @@ use App\Constant\GithubLabels;
 use App\Constant\JiraIssueTypes;
 use App\Model\JirHubTask;
 use App\Repository\GitHub\PullRequestLabelRepository;
-use App\Repository\GitHub\PullRequestRepository;
 use Psr\Log\LoggerInterface;
 
-final class UpdatePullRequestLabelsCommand implements SynchronizationCommandInterface
+final readonly class UpdatePullRequestLabelsCommand implements SynchronizationCommandInterface
 {
-    /** @var PullRequestRepository */
-    private $pullRequestRepository;
-
-    /** @var PullRequestLabelRepository */
-    private $pullRequestLabelRepository;
-
-    /** @var LoggerInterface */
-    private $logger;
-
     public function __construct(
-        PullRequestRepository $pullRequestRepository,
-        PullRequestLabelRepository $pullRequestLabelRepository,
-        LoggerInterface $logger
+        private PullRequestLabelRepository $pullRequestLabelRepository,
+        private LoggerInterface $logger
     ) {
-        $this->pullRequestRepository      = $pullRequestRepository;
-        $this->pullRequestLabelRepository = $pullRequestLabelRepository;
-        $this->logger                     = $logger;
     }
 
     public function execute(JirHubTask $jirHubTask): void
     {
         $pullRequest = $jirHubTask->getGithubPullRequest();
-        $jiraIssue   = $jirHubTask->getJiraIssue();
+        $jiraIssue = $jirHubTask->getJiraIssue();
 
         if (null === $jiraIssue) {
             return;

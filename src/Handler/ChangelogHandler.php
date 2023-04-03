@@ -5,24 +5,18 @@ namespace App\Handler;
 use App\Repository\GitHub\CommitRepository;
 use App\Repository\GitHub\PullRequestRepository;
 
-class ChangelogHandler
+readonly class ChangelogHandler
 {
-    /** @var CommitRepository */
-    private $commitRepository;
-
-    /** @var PullRequestRepository */
-    private $pullRequestRepository;
-
-    public function __construct(CommitRepository $commitRepository, PullRequestRepository $pullRequestRepository)
-    {
-        $this->commitRepository      = $commitRepository;
-        $this->pullRequestRepository = $pullRequestRepository;
+    public function __construct(
+        private CommitRepository $commitRepository,
+        private PullRequestRepository $pullRequestRepository
+    ) {
     }
 
     public function getChangelog(string $prev_head, string $head): array
     {
         $messagesLinks = $this->getOrderedChangelog($prev_head, $head);
-        $messages      = [];
+        $messages = [];
 
         foreach ($messagesLinks as $value) {
             if (\is_array($value)) {
@@ -37,7 +31,7 @@ class ChangelogHandler
 
     public function getChangelogWithLinks(string $prev_head, string $head): array
     {
-        $type          = [];
+        $type = [];
         $messagesLinks = $this->getOrderedChangelog($prev_head, $head);
 
         foreach ($messagesLinks as $value) {
@@ -49,7 +43,7 @@ class ChangelogHandler
 
     private function getCommitsWithLinks($prev_head, $head): array
     {
-        $commits       = $this->commitRepository->getChangelog($prev_head, $head);
+        $commits = $this->commitRepository->getChangelog($prev_head, $head);
         $messagesLinks = [];
 
         foreach ($commits['commits'] as $commit) {
@@ -75,7 +69,7 @@ class ChangelogHandler
         });
 
         $plSections = [];
-        $commits    = [];
+        $commits = [];
 
         foreach ($messagesLinks as $key => $value) {
             $commit = ['message' => trim($value['message']), 'labels' => [], 'html_url' => []];
@@ -126,7 +120,7 @@ class ChangelogHandler
         if (\count($bugMessages) > 0) {
             $messagesLinks[] = 'Bug fixes';
             $messagesLinks[] = '---------';
-            $messagesLinks   = array_merge($messagesLinks, $bugMessages);
+            $messagesLinks = array_merge($messagesLinks, $bugMessages);
             $messagesLinks[] = null;
         }
 

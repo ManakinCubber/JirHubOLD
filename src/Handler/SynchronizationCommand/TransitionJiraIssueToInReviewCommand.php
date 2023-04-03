@@ -12,35 +12,15 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-final class TransitionJiraIssueToInReviewCommand implements SynchronizationCommandInterface
+final readonly class TransitionJiraIssueToInReviewCommand implements SynchronizationCommandInterface
 {
-    /** @var JiraIssueRepository */
-    private $jiraIssueRepository;
-
-    /** @var string */
-    private $label;
-
-    /** @var string */
-    private $statusId;
-
-    /** @var int */
-    private $transitionId;
-
-    /** @var LoggerInterface */
-    private $logger;
-
     public function __construct(
-        JiraIssueRepository $jiraIssueRepository,
-        string $label,
-        int $statusId,
-        int $transitionId,
-    LoggerInterface $logger
+        private JiraIssueRepository $jiraIssueRepository,
+        private string $label,
+        private int $statusId,
+        private int $transitionId,
+        private LoggerInterface $logger
     ) {
-        $this->jiraIssueRepository = $jiraIssueRepository;
-        $this->label               = $label;
-        $this->statusId            = $statusId;
-        $this->transitionId        = $transitionId;
-        $this->logger              = $logger;
     }
 
     /**
