@@ -24,7 +24,7 @@ final class GoogleController extends AbstractController
     }
 
     /**
-     * After going to Facebook, you're redirected back here
+     * After going to Google, you're redirected back here
      * because this is the "redirect_route" you configured
      * in config/packages/knpu_oauth2_client.yaml.
      */

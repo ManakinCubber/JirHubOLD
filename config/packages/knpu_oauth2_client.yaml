@@ -2,11 +2,9 @@ knpu_oauth2_client:
     clients:
         google_main:
             type: google
-            # add and set these environment variables in your .env files
             client_id: '%env(OAUTH_GOOGLE_CLIENT_ID)%'
             client_secret: '%env(OAUTH_GOOGLE_CLIENT_SECRET)%'
-            # a route name you'll create
             redirect_route: connect_google_check
             redirect_params: { }
-            # Optional value for sending hd parameter. More detail: https://developers.google.com/identity/protocols/OpenIDConnect#hd-param
+            # Sending hd parameter. More detail: https://developers.google.com/identity/protocols/OpenIDConnect#hd-param
             hosted_domain: '%hosted_domain%'

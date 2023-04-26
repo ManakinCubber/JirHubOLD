@@ -30,7 +30,7 @@ final class GoogleAuthenticator extends OAuth2Authenticator implements Authentic
 
     public function supports(Request $request): ?bool
     {
-        return 'app_google_connect_check' === $request->attributes->get('_route');
+        return 'connect_google_check' === $request->attributes->get('_route');
     }
 
     public function authenticate(Request $request): Passport
