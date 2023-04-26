@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 final class GoogleController extends AbstractController
 {
     /**
-     * Link to this controller to start the "connect" process
+     * Link to this controller to start the "connect" process.
      */
     #[Route('/connect/google', name: 'connect_google_start')]
     public function connect(ClientRegistry $clientRegistry): RedirectResponse
@@ -26,7 +26,7 @@ final class GoogleController extends AbstractController
     /**
      * After going to Facebook, you're redirected back here
      * because this is the "redirect_route" you configured
-     * in config/packages/knpu_oauth2_client.yaml
+     * in config/packages/knpu_oauth2_client.yaml.
      */
     #[Route('/connect/google/check', name: 'connect_google_check')]
     public function connectCheck(Request $request, ClientRegistry $clientRegistry)

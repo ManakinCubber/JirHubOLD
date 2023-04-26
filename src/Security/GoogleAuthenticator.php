@@ -6,6 +6,7 @@ namespace App\Security;
 
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +17,6 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 final class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationEntrypointInterface
 {
@@ -30,7 +30,7 @@ final class GoogleAuthenticator extends OAuth2Authenticator implements Authentic
 
     public function supports(Request $request): ?bool
     {
-        return $request->attributes->get('_route') === 'app_google_connect_check';
+        return 'app_google_connect_check' === $request->attributes->get('_route');
     }
 
     public function authenticate(Request $request): Passport
